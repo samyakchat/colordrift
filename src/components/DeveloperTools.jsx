@@ -51,8 +51,22 @@ export default function DeveloperTools({ colorData, colorHex }) {
       { label: 'Border', code: `.border { border: 1px solid ${hexColor}; }` },
     ],
     'Dark Mode': [
-      { label: 'Tailwind', code: `className="bg-[${hexColor}] dark:bg-[${darkerColor}]"` },
-      { label: 'Conditional', code: `backgroundColor: isDark ? '${darkerColor}' : '${hexColor}'` },
+
+      { label: 'CSS', code: `
+:root {
+  --bg-color: ${hexColor};
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: ${darkerColor};
+  }
+}
+
+.element {
+  background-color: var(--bg-color);
+}`.trim()
+  }
     ],
   };
 
@@ -104,13 +118,13 @@ export default function DeveloperTools({ colorData, colorHex }) {
 
       {/* Code Snippets - All Languages in One Grid */}
       <div className="pt-6 border-t border-gray-200">
-        <h2 className="text-sm font-semibold text-gray-900 mb-6">Code Snippets</h2>
+        <h2 className="text-sm font-semibold text-gray-900 mb-6"> </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-max">
           {Object.entries(languages).map(([lang, items], langIdx) => (
             <div key={lang} className="bg-white border border-gray-200 rounded-lg p-5">
-              <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wide mb-4 pb-3 border-b border-gray-200">
+              <h2 className="text-[10pt] font-semibold text-gray-900  tracking-wide mb-4 pb-3 border-b border-gray-200">
                 {lang}
-              </h3>
+              </h2>
               <div className="space-y-4">
                 {items.map((item, idx) => (
                   <CodeBlock

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 export default function ShadesTints({ colorHex }) {
+    const navigate = useNavigate();
   const [count] = useState(10);
 
   // Convert hex to RGB
@@ -130,6 +131,9 @@ export default function ShadesTints({ colorHex }) {
         <div className="overflow-x-auto pb-4">
           <div className="flex gap-2 min-w-max">
             {shades.map((variation, idx) => (
+                <button
+                  onClick={() => navigate(`/color/${variation.hex}`)}
+                >
               <div key={idx} className="flex flex-col items-center flex-shrink-0">
                 <div
                   className="w-16 h-16 rounded-md border border-gray-300  cursor-pointer hover:shadow-md transition"
@@ -145,6 +149,7 @@ export default function ShadesTints({ colorHex }) {
                   {variation.label}
                 </p>
               </div>
+              </button>
             ))}
           </div>
         </div>
@@ -158,7 +163,7 @@ export default function ShadesTints({ colorHex }) {
           <div className="flex gap-2 min-w-max">
             {tints.map((variation, idx) => (
             <button
-                  onClick={() => navigate(`/color/${variation.hex?.value.replace('#', '')}`)}
+                  onClick={() => navigate(`/color/${variation.hex}`)}
                 >
               <div key={idx} className="flex flex-col items-center flex-shrink-0">
                 <div

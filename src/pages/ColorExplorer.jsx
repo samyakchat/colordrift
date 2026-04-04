@@ -13,7 +13,7 @@ export default function ColorExplorer() {
   const [palettes, setPalettes] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+const borderColor = `#${colorHex}`;
   useEffect(() => {
     const fetchColor = async () => {
       try {
@@ -87,24 +87,54 @@ export default function ColorExplorer() {
       </div>
     );
 
+    const hexToRgb = (hex) => {
+  const clean = hex.replace("#", "");
+  const r = parseInt(clean.substring(0, 2), 16);
+  const g = parseInt(clean.substring(2, 4), 16);
+  const b = parseInt(clean.substring(4, 6), 16);
+  return { r, g, b };
+};
+
+const rgbToCss = (r, g, b, a = 1) => {
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+
+// super light version of the color
+const getSuperLightTint = (hex) => {
+  const { r, g, b } = hexToRgb(hex);
+
+  // push it very close to white but still tinted
+  const mixWithWhite = 0.92; // higher = lighter
+
+  const lr = Math.round(r + (255 - r) * mixWithWhite);
+  const lg = Math.round(g + (255 - g) * mixWithWhite);
+  const lb = Math.round(b + (255 - b) * mixWithWhite);
+
+
+  return rgbToCss(lr, lg, lb, 1);
+};
+
+const cardBg = getSuperLightTint(colorHex);
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16">
         
         {/* Header */}
         <div className="mb-12">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Color Explorer</p>
+         
           <h1 className="text-4xl lg:text-5xl font-semibold text-gray-900 mb-2">#{colorHex}</h1>
         </div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* LEFT PANEL - 2 columns */}
           <div className="lg:col-span-2 space-y-8">
             
             {/* Color Preview Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
+            <div className="bg-white border border-gray-200 rounded-md p-8 hover:border-gray-300 transition-colors"
+            >
+              
               <h2 className="text-sm font-semibold text-gray-900 mb-6">Preview</h2>
               <ColorPreview colorData={colorData} colorHex={colorHex} />
             </div>
@@ -112,7 +142,8 @@ export default function ColorExplorer() {
 
 
             {/* Shades & Tints Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
+            <div style={{ backgroundColor: cardBg }} className="bg-white border border-gray-200 rounded-md p-8 hover:border-gray-300 transition-colors">
+              
               <h2 className="text-sm font-semibold text-gray-900 mb-6">Shades & Tints</h2>
               <ShadesTints colorHex={colorHex} />
             </div>
@@ -124,7 +155,7 @@ export default function ColorExplorer() {
 
           {/* RIGHT PANEL - 1 column */}
           <div className="lg:col-span-1 flex items-start ">
-            <div className=" top-8 bg-white border border-gray-200 rounded-xl p-6 hover:border-gray-300 transition-colors">
+            <div className=" top-8 bg-white border border-gray-200 rounded-md p-6 hover:border-gray-300 transition-colors">
               <h2 className="text-sm font-semibold text-gray-900 mb-6">Variations</h2>
               {palettes && Object.keys(palettes).length > 0 ? (
                 <PaletteGroups palettes={palettes} />
@@ -135,13 +166,13 @@ export default function ColorExplorer() {
           </div>
         </div>
 {/* Color Schemes Card - FULL WIDTH */}
-            <div className="mt-12 bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
+            <div className="mt-12 bg-white border border-gray-200 rounded-md p-8 hover:border-gray-300 transition-colors">
             <h2 className="text-sm font-semibold text-gray-900 mb-9">See it in action</h2>
             <ColorSchemes colorData={colorData} colorHex={colorHex} />
             </div>
         {/* Developer Tools Section */}
-        <div className="mt-12 bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
-          <h2 className="text-sm font-semibold text-gray-900 mb-9">Coding stuff</h2>
+        <div className="mt-12 bg-white border border-gray-200 rounded-md p-8 hover:border-gray-300 transition-colors">
+          <h2 className="text-sm font-semibold text-gray-900 mb-9">To help with coding</h2>
           <DeveloperTools colorData={colorData} colorHex={colorHex} className="mt-5"/>
         </div>
       </div>
