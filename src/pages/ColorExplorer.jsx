@@ -95,7 +95,6 @@ export default function ColorExplorer() {
         <div className="mb-12">
           <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Color Explorer</p>
           <h1 className="text-4xl lg:text-5xl font-semibold text-gray-900 mb-2">#{colorHex}</h1>
-          <p className="text-gray-600">{colorData?.name?.value}</p>
         </div>
 
         {/* Main Grid */}
@@ -110,11 +109,7 @@ export default function ColorExplorer() {
               <ColorPreview colorData={colorData} colorHex={colorHex} />
             </div>
 
-            {/* Color Conversions Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
-              <h2 className="text-sm font-semibold text-gray-900 mb-6">Values</h2>
-              <ColorConversions colorData={colorData} />
-            </div>
+
 
             {/* Shades & Tints Card */}
             <div className="bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
@@ -122,12 +117,10 @@ export default function ColorExplorer() {
               <ShadesTints colorHex={colorHex} />
             </div>
 
-            {/* Color Schemes Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
-              <h2 className="text-sm font-semibold text-gray-900 mb-6">Usage</h2>
-              <ColorSchemes colorData={colorData} colorHex={colorHex} />
-            </div>
+            
+            
           </div>
+          
 
           {/* RIGHT PANEL - 1 column */}
           <div className="lg:col-span-1 flex items-start ">
@@ -141,7 +134,11 @@ export default function ColorExplorer() {
             </div>
           </div>
         </div>
-
+{/* Color Schemes Card - FULL WIDTH */}
+            <div className="mt-12 bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
+            <h2 className="text-sm font-semibold text-gray-900 mb-9">See it in action</h2>
+            <ColorSchemes colorData={colorData} colorHex={colorHex} />
+            </div>
         {/* Developer Tools Section */}
         <div className="mt-12 bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
           <h2 className="text-sm font-semibold text-gray-900 mb-6">Developer</h2>

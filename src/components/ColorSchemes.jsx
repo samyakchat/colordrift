@@ -108,177 +108,156 @@ export default function ColorSchemes({ colorData, colorHex }) {
   const currentScheme = schemes[role][mode];
 
   return (
-    <div className="space-y-6">
-      {/* Controls */}
-      <div className="flex gap-4 flex-wrap">
-        {/* Role Selector */}
-        <div>
-          <label className="text-sm font-semibold text-gray-700 block mb-2">
-            Color Role
-          </label>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="primary">Primary</option>
-            <option value="secondary">Secondary</option>
-            <option value="accent">Accent</option>
-          </select>
-        </div>
-
-        {/* Mode Selector */}
-        <div>
-          <label className="text-sm font-semibold text-gray-700 block mb-2">
-            Theme
-          </label>
-          <select
-            value={mode}
-            onChange={(e) => setMode(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="light">Light Mode</option>
-            <option value="dark">Dark Mode</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Color Swatches */}
-      <div className="grid grid-cols-2 gap-3">
-        {Object.entries(currentScheme).map(([key, color]) => (
-          <div key={key} className="flex items-center gap-3">
-            <div
-              className="w-12 h-12 rounded-lg border border-gray-300 shadow-sm"
-              style={{ backgroundColor: color }}
-              title={color}
-            />
-            <div className="flex-1">
-              <p className="text-sm font-semibold capitalize">
-                {key.replace(/([A-Z])/g, ' $1').trim()}
-              </p>
-              <p className="text-xs font-mono text-gray-500">{color}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Preview */}
-      <div className="mt-6 p-4 rounded-lg border-2 border-gray-200" style={{ backgroundColor: currentScheme.background }}>
-        <h3 className="text-lg font-bold mb-4" style={{ color: currentScheme.primary }}>
-          Component Preview
+    <div className="space-y-8">
+      
+      {/* Title */}
+      <div>
+        <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wider mb-9">
+          
         </h3>
 
-        {/* Button Preview - Shows your color in action */}
-        <div className="mb-4 flex gap-2 flex-wrap">
-          <button
-            className="px-4 py-2 rounded-lg font-medium transition hover:opacity-90"
-            style={{
-              backgroundColor: role === 'primary' ? hexColor : currentScheme.primary,
-              color: role === 'primary' ? getContrastColor(hexColor) : currentScheme.text,
-            }}
-          >
-            {role === 'primary' ? 'Your Color' : 'Primary Button'}
-          </button>
+        {/* Controls and Preview Grid */}
+        <div className="grid md:grid-cols-2 gap-6 items-start">
 
-          <button
-            className="px-4 py-2 rounded-lg font-medium transition border-2 hover:opacity-90"
-            style={{
-              borderColor: role === 'secondary' ? hexColor : currentScheme.secondary,
-              color: role === 'secondary' ? getContrastColor(hexColor) : currentScheme.text,
-              backgroundColor: role === 'secondary' ? hexColor : 'transparent',
-            }}
-          >
-            {role === 'secondary' ? 'Your Color' : 'Secondary Button'}
-          </button>
+          {/* LEFT: Controls */}
+          <div className="space-y-6">
 
-          {role === 'accent' && (
-            <button
-              className="px-4 py-2 rounded-lg font-medium transition"
-              style={{
-                backgroundColor: hexColor,
-                color: getContrastColor(hexColor),
-              }}
+            {/* Role Selector */}
+            <div>
+              <label className="text-xs font-semibold text-gray-700 block mb-2">
+                Color Role
+              </label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="accent">Accent</option>
+              </select>
+            </div>
+
+            {/* Mode Selector */}
+            <div>
+              <label className="text-xs font-semibold text-gray-700 block mb-2">
+                Theme
+              </label>
+              <select
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+
+            {/* Color Swatches (compact) */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-3 pt-2">
+              {Object.entries(currentScheme).map(([key, color]) => (
+                <div key={key} className="flex items-center gap-3">
+                  <div
+                    className="w-8 h-8 rounded-md border border-gray-300"
+                    style={{ backgroundColor: color }}
+                  />
+                  <div>
+                    <p className="text-sm font-medium capitalize">
+                      {key}
+                    </p>
+                    <p className="text-[11px] text-gray-500 font-mono">
+                      {color}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+
+          {/* RIGHT: Preview */}
+          <div className="space-y-6 flex flex-col">
+
+            {/* Preview Panel */}
+            <div
+              className="p-4 border border-gray-200 rounded-md flex-1 flex flex-col"
+              style={{ backgroundColor: currentScheme.background }}
             >
-              Accent Button
-            </button>
-          )}
-        </div>
+              <h3
+                className="text-lg font-semibold mb-4"
+                style={{ color: currentScheme.primary }}
+              >
+                Preview
+              </h3>
+              
 
-        {/* Text Preview */}
-        <div className="space-y-2 mb-4">
-          <p style={{ color: currentScheme.text }} className="font-semibold">
-            Primary Text - This is the main content
-          </p>
-          <p style={{ color: currentScheme.textSecondary }} className="text-sm">
-            Secondary text with reduced emphasis
-          </p>
-        </div>
+              {/* Buttons */}
+              <div className="flex gap-2 flex-wrap mb-4">
+                <button
+                  className="px-4 py-2 text-sm font-medium border rounded-md"
+                  style={{
+                    backgroundColor: role === 'primary' ? hexColor : currentScheme.primary,
+                    color: role === 'primary' ? getContrastColor(hexColor) : currentScheme.text,
+                    borderColor: currentScheme.border,
+                  }}
+                >
+                  Primary
+                </button>
 
-        {/* Card Preview with color accent */}
-        <div
-          className="mt-4 p-4 rounded-lg border-l-4"
-          style={{
-            backgroundColor: currentScheme.secondary,
-            borderColor: role === 'accent' ? hexColor : currentScheme.primary,
-            borderLeftWidth: '4px',
-          }}
-        >
-          <p style={{ color: currentScheme.text }} className="text-sm font-medium">
-            Card with {role === 'accent' ? 'accent' : role} color accent
-          </p>
-          <p style={{ color: currentScheme.textSecondary }} className="text-xs mt-1">
-            The colored left border demonstrates your color in context
-          </p>
-        </div>
+                <button
+                  className="px-4 py-2 text-sm font-medium border rounded-md"
+                  style={{
+                    backgroundColor: role === 'secondary' ? hexColor : 'transparent',
+                    borderColor: role === 'secondary' ? hexColor : currentScheme.border,
+                    color: role === 'secondary' ? getContrastColor(hexColor) : currentScheme.text,
+                  }}
+                >
+                  Secondary
+                </button>
 
-        {/* Badge/Tag with your color */}
-        <div className="mt-4 flex gap-2 flex-wrap">
-          <span
-            className="px-3 py-1 rounded-full text-sm font-medium"
-            style={{
-              backgroundColor: hexColor,
-              color: getContrastColor(hexColor),
-            }}
-          >
-            Badge with your color
-          </span>
-          <span
-            className="px-3 py-1 rounded-full text-sm font-medium border-2"
-            style={{
-              borderColor: hexColor,
-              color: hexColor,
-              backgroundColor: 'transparent',
-            }}
-          >
-            Outlined badge
-          </span>
+                {role === 'accent' && (
+                  <button
+                    className="px-4 py-2 text-sm font-medium rounded-md"
+                    style={{
+                      backgroundColor: hexColor,
+                      color: getContrastColor(hexColor),
+                    }}
+                  >
+                    Accent
+                  </button>
+                )}
+              </div>
+
+              {/* Text */}
+              <div className="space-y-1 mb-4">
+                <p style={{ color: currentScheme.text }} className="text-sm font-medium">
+                  Primary text example
+                </p>
+                <p style={{ color: currentScheme.textSecondary }} className="text-xs">
+                  Secondary text example
+                </p>
+              </div>
+
+              {/* Card */}
+              <div
+                className="p-3 border-l-4 rounded-md"
+                style={{
+                  backgroundColor: currentScheme.secondary,
+                  borderColor: role === 'accent' ? hexColor : currentScheme.primary,
+                }}
+              >
+                <p style={{ color: currentScheme.text }} className="text-sm">
+                  Accent card preview
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
       </div>
 
-      {/* Color Values */}
-      <div className="bg-gray-50 p-4 rounded-lg">
-        <h4 className="font-semibold text-sm mb-3">Color Values</h4>
-        <div className="space-y-2 text-sm">
-          <p>
-            <strong>HEX:</strong>{' '}
-            <code className="bg-white px-2 py-1 rounded text-xs font-mono">
-              {hexColor}
-            </code>
-          </p>
-          <p>
-            <strong>RGB:</strong>{' '}
-            <code className="bg-white px-2 py-1 rounded text-xs font-mono">
-              rgb({rgbColor?.r}, {rgbColor?.g}, {rgbColor?.b})
-            </code>
-          </p>
-          <p>
-            <strong>CSS Variable:</strong>{' '}
-            <code className="bg-white px-2 py-1 rounded text-xs font-mono">
-              --color-{role}: {hexColor};
-            </code>
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
