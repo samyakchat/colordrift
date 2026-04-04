@@ -157,6 +157,9 @@ export default function ShadesTints({ colorHex }) {
         <div className="overflow-x-auto pb-4">
           <div className="flex gap-2 min-w-max">
             {tints.map((variation, idx) => (
+            <button
+                  onClick={() => navigate(`/color/${variation.hex?.value.replace('#', '')}`)}
+                >
               <div key={idx} className="flex flex-col items-center flex-shrink-0">
                 <div
                   className="w-16 h-16 rounded-md border border-gray-300  cursor-pointer hover:shadow-md transition"
@@ -172,6 +175,7 @@ export default function ShadesTints({ colorHex }) {
                   {variation.label}
                 </p>
               </div>
+            </button>
             ))}
           </div>
         </div>

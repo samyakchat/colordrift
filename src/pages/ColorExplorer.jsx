@@ -141,8 +141,8 @@ export default function ColorExplorer() {
             </div>
         {/* Developer Tools Section */}
         <div className="mt-12 bg-white border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-colors">
-          <h2 className="text-sm font-semibold text-gray-900 mb-6">Developer</h2>
-          <DeveloperTools colorData={colorData} colorHex={colorHex} />
+          <h2 className="text-sm font-semibold text-gray-900 mb-9">Coding stuff</h2>
+          <DeveloperTools colorData={colorData} colorHex={colorHex} className="mt-5"/>
         </div>
       </div>
     </div>
