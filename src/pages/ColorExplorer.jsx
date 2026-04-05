@@ -183,17 +183,17 @@ export default function ColorExplorer() {
           </div>
 
           {/* RIGHT PANEL - 1 column */}
-          <div className="lg:col-span-1 flex items-start ">
+          <div className="lg:col-span-1 space-y-8">
             <div
               style={{ backgroundColor: cardBg, border: cardBorder }}
-              className=" top-8 bg-white  rounded-md p-6 hover:border-gray-300 transition-colors"
+              className="w-full bg-white rounded-md p-8 hover:border-gray-300 transition-colors h-full flex flex-col justify-between"
             >
               <h2 className="text-sm font-semibold text-gray-900 mb-6">
                 Variations
               </h2>
 
               {palettes && Object.keys(palettes).length > 0 ? (
-                <PaletteGroups palettes={palettes} />
+                <PaletteGroups palettes={palettes} className="center"/>
               ) : (
                 <p className="text-sm text-gray-400">Loading variations...</p>
               )}

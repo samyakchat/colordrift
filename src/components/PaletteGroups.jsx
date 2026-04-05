@@ -15,8 +15,8 @@ export default function PaletteGroups({ palettes }) {
     quad: 'Quadricolor'
   };
   const navigate = useNavigate();
-  return (//navigate(`/color/${hex}`);
-    <div className="space-y-6">
+  return (
+    <div className="flex flex-col h-full space-y-8 items-center justify-center">
       {Object.entries(palettes).map(([mode, colors]) => (
         <div key={mode}>
           <h3 className="text-md font-semibold mb-2">{groupNames[mode]}</h3>
@@ -29,7 +29,7 @@ export default function PaletteGroups({ palettes }) {
                   onClick={() => navigate(`/color/${color.hex?.value.replace('#', '')}`)}
                 >
                   <div
-                    className="w-15 h-15 rounded-sm cursor-pointer hover:shadow-md transition"
+                    className="w-12 h-12 rounded-sm cursor-pointer flex hover:shadow-md transition"
                     style={{ backgroundColor: color.hex?.value || `#${color}` }}
                     title={color.hex?.value}
                   />
@@ -37,7 +37,6 @@ export default function PaletteGroups({ palettes }) {
                     {(color.hex?.value || color).slice(1)}
                   </p>
                 </button>
-                
               </div>
             ))}
           </div>
