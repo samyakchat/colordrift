@@ -1,0 +1,249 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export default function Palettes() {
+  const navigate = useNavigate();
+  const [palettes, setPalettes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Generate random palette as fallback
+  const generateRandomPalette = (mode, index) => {
+    const randomColor = () => Math.floor(Math.random() * 256);
+    const randomPalette = Array(5).fill(0).map(() => [
+      randomColor(),
+      randomColor(),
+      randomColor(),
+    ]);
+
+    return {
+      id: `${mode}-${index}`,
+      name: `${mode.charAt(0).toUpperCase() + mode.slice(1)} Palette ${index + 1}`,
+      colors: randomPalette.map((rgb) => {
+        const hex = ((rgb[0] << 16) | (rgb[1] << 8) | rgb[2])
+          .toString(16)
+          .padStart(6, '0')
+          .toUpperCase();
+        return { rgb, hex };
+      }),
+      mode,
+    };
+  };
+
+  useEffect(() => {
+    const fetchPalettes = async () => {
+      try {
+        setLoading(true);
+        // Colormind API modes: 'default', 'ui', 'painting'
+        const modes = ['default', 'ui', 'painting'];
+        const allPalettes = [];
+
+        for (let mode of modes) {
+          for (let i = 0; i < 3; i++) {
+            try {
+              const response = await fetch('https://cors-anywhere.herokuapp.com/http://colormind.io/api/', {
+                method: 'POST',
+                headers: { 
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ model: mode }),
+              });
+
+              if (response.ok) {
+                const data = await response.json();
+                if (data.result) {
+                  allPalettes.push({
+                    id: `${mode}-${i}`,
+                    name: `${mode.charAt(0).toUpperCase() + mode.slice(1)} Palette ${i + 1}`,
+                    colors: data.result.map((rgb) => {
+                      const hex = ((rgb[0] << 16) | (rgb[1] << 8) | rgb[2])
+                        .toString(16)
+                        .padStart(6, '0')
+                        .toUpperCase();
+                      return { rgb, hex };
+                    }),
+                    mode,
+                  });
+                  continue;
+                }
+              }
+            } catch (err) {
+              console.warn(`Colormind API failed for ${mode}, using random palette`);
+            }
+
+            // Fallback to random palette
+            allPalettes.push(generateRandomPalette(mode, i));
+          }
+        }
+
+        setPalettes(allPalettes);
+        setError(null);
+      } catch (err) {
+        console.error('Error:', err);
+        // Generate all random palettes as final fallback
+        const modes = ['default', 'ui', 'painting'];
+        const fallbackPalettes = [];
+        modes.forEach((mode) => {
+          for (let i = 0; i < 3; i++) {
+            fallbackPalettes.push(generateRandomPalette(mode, i));
+          }
+        });
+        setPalettes(fallbackPalettes);
+        setError(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPalettes();
+  }, []);
+
+  const refreshPalettes = () => {
+    setLoading(true);
+    window.location.reload();
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16">
+          <p className="text-gray-500 text-center">Loading palettes...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16">
+        {/* Header */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+             
+              <h1 className="text-4xl lg:text-5xl font-semibold text-gray-900 mb-2">
+                Random Palettes
+              </h1>
+            </div>
+            <button
+              onClick={refreshPalettes}
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-400 transition text-sm font-medium"
+            >
+              Try again :(
+            </button>
+          </div>
+          <p className="text-gray-600 max-w-2xl text-left">
+            Explore some generated Palettes in each category, although some may not be to your taste, one will be.
+          </p>
+        </div>
+
+        {/* Palettes Grid */}
+        <div className="space-y-8">
+          {/* Default Palettes */}
+          <div>
+            <h2 className="text-sm font-semibold text-gray-900  tracking-wider mb-4">
+              Default
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {palettes
+                .filter((p) => p.mode === 'default')
+                .map((palette) => (
+                  <PaletteCard key={palette.id} palette={palette} navigate={navigate} />
+                ))}
+            </div>
+          </div>
+
+          {/* UI Palettes */}
+          <div>
+            <h2 className="text-sm font-semibold text-gray-900  tracking-wider mb-4">
+              UI Design
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {palettes
+                .filter((p) => p.mode === 'ui')
+                .map((palette) => (
+                  <PaletteCard key={palette.id} palette={palette} navigate={navigate} />
+                ))}
+            </div>
+          </div>
+
+          {/* Painting Palettes */}
+          <div>
+            <h2 className="text-sm font-semibold text-gray-900  tracking-wider mb-4">
+              Painting & Art
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {palettes
+                .filter((p) => p.mode === 'painting')
+                .map((palette) => (
+                  <PaletteCard key={palette.id} palette={palette} navigate={navigate} />
+                ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PaletteCard({ palette, navigate }) {
+  const [copiedIndex, setCopiedIndex] = useState(null);
+
+  const copyToClipboard = (text, index) => {
+    navigator.clipboard.writeText(text);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  return (
+    <div className="bg-gray-50 rounded-lg overflow-hidden">
+      {/* Color Swatches */}
+      <div className="flex h-24">
+        {palette.colors.map((color, idx) => (
+          <button
+            key={idx}
+            onClick={() => navigate(`/color/${color.hex}`)}
+            className="flex-1 hover:opacity-90 transition cursor-pointer group relative"
+            style={{ backgroundColor: `#${color.hex}` }}
+            title={`#${color.hex}`}
+          >
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/20">
+              <span className="text-white text-xs font-mono">#{color.hex}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Palette Info */}
+      <div className="p-4">
+        <h3 className="font-semibold text-gray-900 mb-3">{palette.name}</h3>
+
+        {/* Color Codes */}
+        <div className="space-y-2 mb-4">
+          {palette.colors.map((color, idx) => (
+            <div key={idx} className="group flex items-center justify-between">
+              <span className="text-xs font-mono text-gray-700">#{color.hex}</span>
+              <button
+                onClick={() => copyToClipboard(`#${color.hex}`, idx)}
+                className="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded opacity-0 group-hover:opacity-100 transition"
+              >
+                {copiedIndex === idx ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Action */}
+        <button
+          onClick={() => {
+            const allHex = palette.colors.map((c) => `#${c.hex}`).join(', ');
+            copyToClipboard(allHex, 'all');
+          }}
+          className="w-full py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-400 rounded transition"
+        >
+          Copy Palette
+        </button>
+      </div>
+    </div>
+  );
+}

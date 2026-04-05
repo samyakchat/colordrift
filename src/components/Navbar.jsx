@@ -49,6 +49,7 @@ export default function Navbar() {
       setColorInput('');
     }
   };
+  
 
   return (
     <nav className="bg-white border-b border-gray-200">
@@ -60,12 +61,12 @@ export default function Navbar() {
             <div className="w-9 h-9">
               <img
                 src="/logo.png"
-                alt="Color Flow Logo"
+                alt="Color Drift Logo"
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-[24px] font-semibold tracking-tight text-gray-900">
-              colorflow
+            <span className="text-[24px] font-semibold tracking-tight text-gray-900 hover:text-gray-300 transition">
+              colordrift
             </span>
           </Link>
 
@@ -74,7 +75,7 @@ export default function Navbar() {
             onSubmit={handleSearch}
             className="hidden md:flex flex-1 max-w-lg mx-10"
           >
-            <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-gray-500 transition">
+            <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
               <input
                 type="text"
                 placeholder="Hex (78aa28) or RGB (120, 170, 40)"
@@ -84,7 +85,7 @@ export default function Navbar() {
               />
               <button
                 type="submit"
-                className="px-4 border-l border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="px-4 border-l border-gray-300 text-sm font-medium text-gray-700 hover:bg-[#73aa28] hover:border-[#73aa28] transition"
               >
                 Search
               </button>
@@ -95,21 +96,21 @@ export default function Navbar() {
           <div className="flex items-center gap-5">
             <Link
               to="/"
-              className="text-sm text-gray-700 hover:text-gray-900"
+              className="text-sm text-gray-700 hover:text-[#73aa28]"
             >
               Home
             </Link>
 
             <a
-              href="#"
-              className="text-sm text-gray-700 hover:text-gray-900"
+              href="/palettes"
+              className="text-sm text-gray-700 hover:text-[#73aa28]"
             >
               Palettes
             </a>
 
             <a
-              href="#"
-              className="text-sm text-gray-700 hover:text-gray-900"
+              href="/about"
+              className="text-sm text-gray-700 hover:text-[#78aa28]"
             >
               About
             </a>
