@@ -227,40 +227,32 @@ function PaletteCard({ palette, navigate }) {
       {/* Color Swatches */}
       <div className="flex h-24">
         {palette.colors.map((color, idx) => (
-          <button
+          <div
             key={idx}
             onClick={() => navigate(`/color/${color.hex}`)}
             className="flex-1 hover:opacity-90 transition cursor-pointer group relative"
             style={{ backgroundColor: `#${color.hex}` }}
             title={`#${color.hex}`}
           >
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/20">
-              <span className="text-white text-xs font-mono">#{color.hex}</span>
+            <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/20">
+              <span className="text-white text-xs font-mono mb-2">#{color.hex}</span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  copyToClipboard(`#${color.hex}`, idx);
+                }}
+                className="text-xs px-2 py-1 bg-white/30 hover:bg-white/50 text-white rounded transition"
+              >
+                {copiedIndex === idx ? "Copied!" : "Copy"}
+              </button>
             </div>
-          </button>
+          </div>
         ))}
       </div>
 
       {/* Palette Info */}
       <div className="p-4">
         <h3 className="font-semibold text-gray-900 mb-3">{palette.name}</h3>
-
-        {/* Color Codes */}
-        <div className="space-y-2 mb-4">
-          {palette.colors.map((color, idx) => (
-            <div key={idx} className="group flex items-center justify-between">
-              <span className="text-xs font-mono text-gray-700">
-                #{color.hex}
-              </span>
-              <button
-                onClick={() => copyToClipboard(`#${color.hex}`, idx)}
-                className="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded opacity-0 group-hover:opacity-100 transition"
-              >
-                {copiedIndex === idx ? "Copied!" : "Copy"}
-              </button>
-            </div>
-          ))}
-        </div>
 
         <div className="flex gap-3">
           {/* Copy Palette Button */}
