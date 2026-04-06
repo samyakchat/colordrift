@@ -1,28 +1,29 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Palettes() {
   const navigate = useNavigate();
   const [palettes, setPalettes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   // Generate random palette as fallback
   const generateRandomPalette = (mode, index) => {
     const randomColor = () => Math.floor(Math.random() * 256);
-    const randomPalette = Array(5).fill(0).map(() => [
-      randomColor(),
-      randomColor(),
-      randomColor(),
-    ]);
+    const randomPalette = Array(5)
+      .fill(0)
+      .map(() => [randomColor(), randomColor(), randomColor()]);
 
     return {
       id: `${mode}-${index}`,
-      name: `${mode.charAt(0).toUpperCase() + mode.slice(1)} Palette ${index + 1}`,
+      name: `${mode.charAt(0).toUpperCase() + mode.slice(1)} Palette ${
+        index + 1
+      }`,
       colors: randomPalette.map((rgb) => {
         const hex = ((rgb[0] << 16) | (rgb[1] << 8) | rgb[2])
           .toString(16)
-          .padStart(6, '0')
+          .padStart(6, "0")
           .toUpperCase();
         return { rgb, hex };
       }),
@@ -34,31 +35,37 @@ export default function Palettes() {
     const fetchPalettes = async () => {
       try {
         setLoading(true);
-        // Colormind API modes: 'default', 'ui', 'painting'
-        const modes = ['default', 'ui', 'painting'];
+
+        // Fetch category list
+        const listRes = await fetch("/api/list");
+        const listData = await listRes.json();
+
+        // Example: ["default","ui","makoto_shinkai",...]
+        const fetchedCategories = listData.result || [];
+
+        setCategories(fetchedCategories);
+
         const allPalettes = [];
 
-        for (let mode of modes) {
+        for (let mode of fetchedCategories) {
           for (let i = 0; i < 3; i++) {
             try {
-              const response = await fetch('https://cors-anywhere.herokuapp.com/http://colormind.io/api/', {
-                method: 'POST',
-                headers: { 
-                  'Content-Type': 'application/json',
-                },
+              const response = await fetch("/api/palettes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ model: mode }),
-              });
+            });
 
               if (response.ok) {
                 const data = await response.json();
                 if (data.result) {
                   allPalettes.push({
                     id: `${mode}-${i}`,
-                    name: `${mode.charAt(0).toUpperCase() + mode.slice(1)} Palette ${i + 1}`,
+                    name: `${formatName(mode)} Palette ${i + 1}`,
                     colors: data.result.map((rgb) => {
                       const hex = ((rgb[0] << 16) | (rgb[1] << 8) | rgb[2])
                         .toString(16)
-                        .padStart(6, '0')
+                        .padStart(6, "0")
                         .toUpperCase();
                       return { rgb, hex };
                     }),
@@ -68,10 +75,10 @@ export default function Palettes() {
                 }
               }
             } catch (err) {
-              console.warn(`Colormind API failed for ${mode}, using random palette`);
+              console.warn(`Failed for ${mode}, using fallback`);
             }
 
-            // Fallback to random palette
+            // fallback
             allPalettes.push(generateRandomPalette(mode, i));
           }
         }
@@ -79,17 +86,8 @@ export default function Palettes() {
         setPalettes(allPalettes);
         setError(null);
       } catch (err) {
-        console.error('Error:', err);
-        // Generate all random palettes as final fallback
-        const modes = ['default', 'ui', 'painting'];
-        const fallbackPalettes = [];
-        modes.forEach((mode) => {
-          for (let i = 0; i < 3; i++) {
-            fallbackPalettes.push(generateRandomPalette(mode, i));
-          }
-        });
-        setPalettes(fallbackPalettes);
-        setError(null);
+        console.error(err);
+        setError("Failed to load palettes");
       } finally {
         setLoading(false);
       }
@@ -97,6 +95,10 @@ export default function Palettes() {
 
     fetchPalettes();
   }, []);
+
+  const formatName = (mode) => {
+    return mode.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  };
 
   const refreshPalettes = () => {
     setLoading(true);
@@ -120,7 +122,6 @@ export default function Palettes() {
         <div className="mb-12">
           <div className="flex items-center justify-between mb-4">
             <div>
-             
               <h1 className="text-4xl lg:text-5xl font-semibold text-gray-900 mb-2">
                 Random Palettes
               </h1>
@@ -133,52 +134,59 @@ export default function Palettes() {
             </button>
           </div>
           <p className="text-gray-600 max-w-2xl text-left">
-            Explore some generated Palettes in each category, although some may not be to your taste, one will be.
+            Explore some generated Palettes in each category. UI and Default are constant categories, while the rest may change every day. All of these palettes are useful for UI color palettes.
           </p>
         </div>
 
         {/* Palettes Grid */}
         <div className="space-y-8">
-          {/* Default Palettes */}
-          <div>
-            <h2 className="text-sm font-semibold text-gray-900  tracking-wider mb-4">
-              Default
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {palettes
-                .filter((p) => p.mode === 'default')
-                .map((palette) => (
-                  <PaletteCard key={palette.id} palette={palette} navigate={navigate} />
-                ))}
-            </div>
-          </div>
+          <div className="space-y-8">
+            {/* First: Default + UI */}
+            {["default", "ui"].map(
+              (category) =>
+                categories.includes(category) && (
+                  <div key={category}>
+                    <h2 className="text-sm font-semibold text-gray-900 tracking-wider mb-4">
+                      {category === "ui" ? "UI Design" : "Default"}
+                    </h2>
 
-          {/* UI Palettes */}
-          <div>
-            <h2 className="text-sm font-semibold text-gray-900  tracking-wider mb-4">
-              UI Design
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {palettes
-                .filter((p) => p.mode === 'ui')
-                .map((palette) => (
-                  <PaletteCard key={palette.id} palette={palette} navigate={navigate} />
-                ))}
-            </div>
-          </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {palettes
+                        .filter((p) => p.mode === category)
+                        .map((palette) => (
+                          <PaletteCard
+                            key={palette.id}
+                            palette={palette}
+                            navigate={navigate}
+                          />
+                        ))}
+                    </div>
+                  </div>
+                )
+            )}
 
-          {/* Painting Palettes */}
-          <div>
-            <h2 className="text-sm font-semibold text-gray-900  tracking-wider mb-4">
-              Painting & Art
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {palettes
-                .filter((p) => p.mode === 'painting')
-                .map((palette) => (
-                  <PaletteCard key={palette.id} palette={palette} navigate={navigate} />
-                ))}
-            </div>
+            {/* Then: dynamic categories */}
+            {categories
+              .filter((c) => c !== "default" && c !== "ui")
+              .map((category) => (
+                <div key={category}>
+                  <h2 className="text-sm font-semibold text-gray-900 tracking-wider mb-4">
+                    {formatName(category)}
+                  </h2>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {palettes
+                      .filter((p) => p.mode === category)
+                      .map((palette) => (
+                        <PaletteCard
+                          key={palette.id}
+                          palette={palette}
+                          navigate={navigate}
+                        />
+                      ))}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -222,12 +230,14 @@ function PaletteCard({ palette, navigate }) {
         <div className="space-y-2 mb-4">
           {palette.colors.map((color, idx) => (
             <div key={idx} className="group flex items-center justify-between">
-              <span className="text-xs font-mono text-gray-700">#{color.hex}</span>
+              <span className="text-xs font-mono text-gray-700">
+                #{color.hex}
+              </span>
               <button
                 onClick={() => copyToClipboard(`#${color.hex}`, idx)}
                 className="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded opacity-0 group-hover:opacity-100 transition"
               >
-                {copiedIndex === idx ? 'Copied!' : 'Copy'}
+                {copiedIndex === idx ? "Copied!" : "Copy"}
               </button>
             </div>
           ))}
@@ -236,8 +246,8 @@ function PaletteCard({ palette, navigate }) {
         {/* Action */}
         <button
           onClick={() => {
-            const allHex = palette.colors.map((c) => `#${c.hex}`).join(', ');
-            copyToClipboard(allHex, 'all');
+            const allHex = palette.colors.map((c) => `#${c.hex}`).join(", ");
+            copyToClipboard(allHex, "all");
           }}
           className="w-full py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-400 rounded transition"
         >
