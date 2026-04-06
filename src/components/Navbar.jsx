@@ -1,44 +1,49 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Navbar() {
-  const [colorInput, setColorInput] = useState('');
+  const [colorInput, setColorInput] = useState("");
   const navigate = useNavigate();
 
   const rgbToHex = (r, g, b) => {
-    return ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0').toUpperCase();
+    return ((r << 16) | (g << 8) | b)
+      .toString(16)
+      .padStart(6, "0")
+      .toUpperCase();
   };
 
   const parseColorInput = (input) => {
     const trimmed = input.trim();
-    
+
     // Check if it's RGB format: rgb(r, g, b)
-    const rgbMatch = trimmed.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
+    const rgbMatch = trimmed.match(
+      /rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i
+    );
     if (rgbMatch) {
       const r = parseInt(rgbMatch[1]);
       const g = parseInt(rgbMatch[2]);
       const b = parseInt(rgbMatch[3]);
-      
+
       // Validate RGB values
       if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
         return rgbToHex(r, g, b);
       }
     }
-    
+
     // Check if it's just comma-separated RGB: r,g,b
     const csvMatch = trimmed.match(/^(\d+)\s*,\s*(\d+)\s*,\s*(\d+)$/);
     if (csvMatch) {
       const r = parseInt(csvMatch[1]);
       const g = parseInt(csvMatch[2]);
       const b = parseInt(csvMatch[3]);
-      
+
       if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
         return rgbToHex(r, g, b);
       }
     }
-    
+
     // Otherwise assume it's hex
-    return trimmed.replace('#', '').toUpperCase();
+    return trimmed.replace("#", "").toUpperCase();
   };
 
   const handleSearch = (e) => {
@@ -46,16 +51,14 @@ export default function Navbar() {
     if (colorInput.trim()) {
       const hex = parseColorInput(colorInput);
       navigate(`/color/${hex}`);
-      setColorInput('');
+      setColorInput("");
     }
   };
-  
 
   return (
     <nav className="bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-14">
-
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-9 h-9">
@@ -72,32 +75,28 @@ export default function Navbar() {
 
           {/* Center Search (desktop) */}
           <form
-            onSubmit={handleSearch}
-            className="hidden md:flex flex-1 max-w-lg mx-10"
-          >
-            <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
-              <input
-                type="text"
-                placeholder="Hex (78aa28) or RGB (120, 170, 40)"
-                value={colorInput}
-                onChange={(e) => setColorInput(e.target.value)}
-                className="w-full px-3 py-2 text-sm outline-none"
-              />
-              <button
-                type="submit"
-                className="px-4 border-l border-gray-300 text-sm font-medium text-gray-700 hover:bg-[#73aa28] hover:border-[#73aa28] transition"
-              >
-                Search
-              </button>
-            </div>
-          </form>
-
+  onSubmit={handleSearch}
+  className="hidden l-20 w-full md:flex fixed left-1/2 transform -translate-x-1/2 max-w-lg"
+>
+  <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
+    <input
+      type="text"
+      placeholder="Hex (78aa28) or RGB (120, 170, 40)"
+      value={colorInput}
+      onChange={(e) => setColorInput(e.target.value)}
+      className="w-full px-3 py-2 text-sm outline-none"
+    />
+    <button
+      type="submit"
+      className="px-4 border-l border-gray-300 text-sm font-medium text-gray-700 hover:bg-[#73aa28] hover:border-[#73aa28] transition"
+    >
+      Search
+    </button>
+  </div>
+</form>
           {/* Links */}
           <div className="flex items-center gap-5">
-            <Link
-              to="/"
-              className="text-sm text-gray-700 hover:text-[#73aa28]"
-            >
+            <Link to="/" className="text-sm text-gray-700 hover:text-[#73aa28]">
               Home
             </Link>
 
