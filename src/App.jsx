@@ -5,19 +5,24 @@ import Palettes from './pages/Palettes';
 import ColorExplorer from './pages/ColorExplorer';
 import Footer from './components/footer';
 import About from './pages/about';
+import { Analytics } from '@vercel/analytics/react';
+
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
+        
         <Route path="/" element={<Home />} />
         <Route path="/color/:colorHex" element={<ColorExplorer />} />
         <Route path="palettes" element={<Palettes />} />
         <Route path="/about" element={<About />} />
       </Routes>
       <Footer />
+      <Analytics />
     </Router>
+    
   );
 }
 
