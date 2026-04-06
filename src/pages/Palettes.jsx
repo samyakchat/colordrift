@@ -54,7 +54,7 @@ export default function Palettes() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ model: mode }),
-            });
+              });
 
               if (response.ok) {
                 const data = await response.json();
@@ -134,7 +134,9 @@ export default function Palettes() {
             </button>
           </div>
           <p className="text-gray-600 max-w-2xl text-left">
-            Explore some generated Palettes in each category. UI and Default are constant categories, while the rest may change every day. All of these palettes are useful for UI color palettes.
+            Explore some generated Palettes in each category. UI and Default are
+            constant categories, while the rest may change every day. All of
+            these palettes are useful for UI color palettes.
           </p>
         </div>
 
@@ -212,10 +214,10 @@ function PaletteCard({ palette, navigate }) {
       let currentnum = parseInt(localStorage.getItem("index"));
       localStorage.setItem("index", currentnum + 1);
     }
-    
+
     let currentnum = parseInt(localStorage.getItem("index"));
     localStorage.setItem(currentnum.toString(), text);
-    
+
     setSavedAll(true);
     setTimeout(() => setSavedAll(false), 2000);
   };

@@ -87,8 +87,8 @@ export default function Saved() {
             Saved Palettes
           </h1>
           <p className="text-gray-600">
-            You haven't saved any palettes yet. If you find one that sticks out to you, save it here.
-           
+            You haven't saved any palettes yet. If you find one that sticks out
+            to you, save it here.
           </p>
         </div>
       </div>
@@ -100,16 +100,16 @@ export default function Saved() {
       <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16">
         {/* Header */}
         <div className="mb-12">
-            <div className="mx-auto max-w-2xl text-center">
-                <h1 className="text-4xl lg:text-5xl font-semibold text-gray-900 mb-2">
-                Saved Palettes
-                </h1>
-                <p className="text-gray-600">
-                    Your collection of saved color palettes. Click on colors to explore
-                    them individually, copy hex codes, or delete palettes you no longer
-                    need.
-                </p>
-            </div>
+          <div className="mx-auto max-w-2xl text-center">
+            <h1 className="text-4xl lg:text-5xl font-semibold text-gray-900 mb-2">
+              Saved Palettes
+            </h1>
+            <p className="text-gray-600">
+              Your collection of saved color palettes. Click on colors to
+              explore them individually, copy hex codes, or delete palettes you
+              no longer need.
+            </p>
+          </div>
         </div>
 
         {/* Palettes Grid */}
@@ -158,8 +158,6 @@ function SavedPaletteCard({ palette, navigate, onDelete }) {
 
       {/* Palette Info */}
       <div className="p-4">
-        
-
         {/* Color Codes */}
         <div className="space-y-2 mb-4">
           {palette.colors.map((color, idx) => (

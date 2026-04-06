@@ -75,25 +75,25 @@ export default function Navbar() {
 
           {/* Center Search (desktop) */}
           <form
-  onSubmit={handleSearch}
-  className="hidden l-20 w-full md:flex fixed left-1/2 transform -translate-x-1/2 max-w-lg"
->
-  <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
-    <input
-      type="text"
-      placeholder="Hex (78aa28) or RGB (120, 170, 40)"
-      value={colorInput}
-      onChange={(e) => setColorInput(e.target.value)}
-      className="w-full px-3 py-2 text-sm outline-none"
-    />
-    <button
-      type="submit"
-      className="px-4 border-l border-gray-300 text-sm font-medium text-gray-700 hover:bg-[#73aa28] hover:border-[#73aa28] transition"
-    >
-      Search
-    </button>
-  </div>
-</form>
+            onSubmit={handleSearch}
+            className="hidden l-20 w-full md:flex fixed left-1/2 transform -translate-x-1/2 max-w-lg"
+          >
+            <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
+              <input
+                type="text"
+                placeholder="Hex (78aa28) or RGB (120, 170, 40)"
+                value={colorInput}
+                onChange={(e) => setColorInput(e.target.value)}
+                className="w-full px-3 py-2 text-sm outline-none"
+              />
+              <button
+                type="submit"
+                className="px-4 border-l border-gray-300 text-sm font-medium text-gray-700 hover:bg-[#73aa28] hover:border-[#73aa28] transition"
+              >
+                Search
+              </button>
+            </div>
+          </form>
           {/* Links */}
           <div className="flex items-center gap-5">
             <Link to="/" className="text-sm text-gray-700 hover:text-[#73aa28]">
