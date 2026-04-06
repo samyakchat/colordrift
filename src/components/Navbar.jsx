@@ -76,7 +76,7 @@ export default function Navbar() {
           {/* Center Search (desktop) */}
           <form
             onSubmit={handleSearch}
-            className="hidden l-20 w-full md:flex fixed left-1/2 transform -translate-x-1/2 max-w-lg"
+            className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-full max-w-2xl"
           >
             <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
               <input
@@ -94,6 +94,7 @@ export default function Navbar() {
               </button>
             </div>
           </form>
+
           {/* Links */}
           <div className="flex items-center gap-5">
             <Link to="/" className="text-sm text-gray-700 hover:text-[#73aa28]">
