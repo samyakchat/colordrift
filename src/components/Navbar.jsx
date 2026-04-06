@@ -109,6 +109,13 @@ export default function Navbar() {
             </a>
 
             <a
+              href="/saved"
+              className="text-sm text-gray-700 hover:text-[#78aa28]"
+            >
+              Saved
+            </a>
+
+            <a
               href="/about"
               className="text-sm text-gray-700 hover:text-[#78aa28]"
             >

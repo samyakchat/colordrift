@@ -6,7 +6,7 @@ import ColorExplorer from './pages/ColorExplorer';
 import Footer from './components/footer';
 import About from './pages/about';
 import { Analytics } from '@vercel/analytics/react';
-
+import Saved from './pages/Saved';
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
         <Route path="/color/:colorHex" element={<ColorExplorer />} />
         <Route path="palettes" element={<Palettes />} />
         <Route path="/about" element={<About />} />
+        <Route path="/saved" element={<Saved />} />
       </Routes>
       <Footer />
       <Analytics />

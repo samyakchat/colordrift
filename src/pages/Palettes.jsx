@@ -196,11 +196,28 @@ export default function Palettes() {
 
 function PaletteCard({ palette, navigate }) {
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [copiedAll, setCopiedAll] = useState(false);
+  const [savedAll, setSavedAll] = useState(false);
 
   const copyToClipboard = (text, index) => {
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const savePalette = (text, index) => {
+    if (!localStorage.getItem("index")) {
+      localStorage.setItem("index", 1);
+    } else {
+      let currentnum = parseInt(localStorage.getItem("index"));
+      localStorage.setItem("index", currentnum + 1);
+    }
+    
+    let currentnum = parseInt(localStorage.getItem("index"));
+    localStorage.setItem(currentnum.toString(), text);
+    
+    setSavedAll(true);
+    setTimeout(() => setSavedAll(false), 2000);
   };
 
   return (
@@ -243,16 +260,31 @@ function PaletteCard({ palette, navigate }) {
           ))}
         </div>
 
-        {/* Action */}
-        <button
-          onClick={() => {
-            const allHex = palette.colors.map((c) => `#${c.hex}`).join(", ");
-            copyToClipboard(allHex, "all");
-          }}
-          className="w-full py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-400 rounded transition"
-        >
-          Copy Palette
-        </button>
+        <div className="flex gap-3">
+          {/* Copy Palette Button */}
+          <button
+            onClick={() => {
+              const allHex = palette.colors.map((c) => `#${c.hex}`).join(", ");
+              copyToClipboard(allHex, "all");
+              setCopiedAll(true);
+              setTimeout(() => setCopiedAll(false), 2000);
+            }}
+            className="w-full py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-400 rounded transition"
+          >
+            {copiedAll ? "Copied!" : "Copy Palette"}
+          </button>
+
+          {/* Save Palette Button */}
+          <button
+            onClick={() => {
+              const allHex = palette.colors.map((c) => `#${c.hex}`).join(", ");
+              savePalette(allHex, "all");
+            }}
+            className="w-full py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-400 rounded transition"
+          >
+            {savedAll ? "Saved!" : "Save Palette"}
+          </button>
+        </div>
       </div>
     </div>
   );
