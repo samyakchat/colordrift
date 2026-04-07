@@ -93,7 +93,7 @@ export default function Navbar() {
               />
               <button
                 type="submit"
-                className="px-4 border-l border-gray-300 text-sm font-medium text-gray-700 hover:bg-[#73aa28] hover:border-[#73aa28] transition"
+                className="px-4 border-l border-gray-300 text-sm bg-white font-medium text-gray-700 hover:bg-[#73aa28] hover:border-[#73aa28] transition"
               >
                 Search
               </button>
