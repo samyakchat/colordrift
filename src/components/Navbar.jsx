@@ -1,8 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { menuOutline } from 'ionicons/icons';
 
+import { addIcons } from "ionicons";
 export default function Navbar() {
+    addIcons({ menuOutline });
+
   const [colorInput, setColorInput] = useState("");
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const rgbToHex = (r, g, b) => {
@@ -57,7 +62,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6 relative">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
@@ -76,7 +81,7 @@ export default function Navbar() {
           {/* Center Search (desktop) */}
           <form
             onSubmit={handleSearch}
-            className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-full max-w-2xl"
+            className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-full max-w-lg"
           >
             <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
               <input
@@ -96,7 +101,7 @@ export default function Navbar() {
           </form>
 
           {/* Links */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 hidden md:flex">
             <Link to="/" className="text-sm text-gray-700 hover:text-[#73aa28]">
               Home
             </Link>
@@ -122,6 +127,59 @@ export default function Navbar() {
               About
             </a>
           </div>
+
+              {/* Mobile menu button */}   
+            <div className="md:hidden">
+                <button
+                    onClick={() => setOpen(!open)}  
+                    className="p-2 rounded-md mt-1 text-gray-700 hover:text-[#73aa28]  "
+                >
+                   <ion-icon name="menu" size="large"></ion-icon>
+                </button>
+            </div>
+
+            {open && (
+                <div className="absolute top-14 left-0 right-0 bg-white border-b-2 border-gray-200 md:hidden  rounded-3xl">
+                  <ul className="flex flex-col px-6 py-4 gap-3">
+                    <li>
+                      <Link to="/" onClick={() => setOpen(false)} className="block text-sm text-gray-700 hover:text-[#73aa28] transition py-2">
+                        Home
+                      </Link>
+                    </li>
+
+                    <li>
+                      <a
+                        href="/palettes"
+                        onClick={() => setOpen(false)}
+                        className="block text-sm text-gray-700 hover:text-[#73aa28] transition py-2"
+                      >
+                        Palettes
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        href="/saved"
+                        onClick={() => setOpen(false)}
+                        className="block text-sm text-gray-700 hover:text-[#78aa28] transition py-2"
+                      >
+                        Saved
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        href="/about"
+                        onClick={() => setOpen(false)}
+                        className="block text-sm text-gray-700 hover:text-[#78aa28] transition py-2"
+                      >
+                        About
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+            )}
+
         </div>
 
         {/* Mobile search */}
