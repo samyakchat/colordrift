@@ -7,12 +7,15 @@ export default function About() {
        
           <h1 className="text-5xl sm:text-6xl font-bold mb-6 leading-tight inline-block bg-gradient-to-r from-[#73aa28] via-[#679924] to-[#73aa28] bg-clip-text text-transparent">About Colordrift</h1>
             <p className="text-lg text-gray-700 mb-4">
-                When designing your UI, you shouldn't have constantly redo your color palettes or worry about how appealing the site may be. Colordrift simply puts the tasks of finding colors, creating palettes, and previewing them in one place.
-                When creating the front end of the project, especially now, sticking out is key. Some palettes found on this website are not only unique but also visually appealing. No more worrying about whether these 2 colors look good together.
+                When designing UI, the process shouldn't be hindered by the search for the right colors. Colordrift is simple, you can search up any color, explore variations, preview frontend components, and copy code for platforms.
             </p>
-            <p className="text-lg text-[#78aa28] mb-4">
+            <p className="text-lg text-gray-700 mb-4">
+Additionally, you can explore color palettes with themes that change every day, save them to your favorites to explore later, and view them in action with our web view feature. In web view, change primary, secondary, and other parameters to decide what fits best for you!            </p>
+            <div className="mt-3">
+            <p className="text-lg text-[#78aa28] mt-6 mb-4">
                 Driven by The Color API and colormind.io
             </p>
+            </div>
             
            
         </div>

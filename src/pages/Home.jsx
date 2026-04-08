@@ -20,7 +20,10 @@ export default function Home() {
       handleSearch();
     }
   };
-
+  const tempPal = (text, index) => {
+    localStorage.setItem("temporary", text);
+    navigate(`/examplepage/temporary`);
+  };
 const featuredColors = [
   { hex: '73aa28', light: 'EEF6E5', name: 'Fresh Green' },
   { hex: 'ff6b6b', light: 'FFECEC', name: 'Coral Red' },
@@ -29,6 +32,8 @@ const featuredColors = [
   { hex: 'a29bfe', light: 'F1EFFF', name: 'Lavender' },
   { hex: 'fd79a8', light: 'FFEFF5', name: 'Pink' },
 ];
+
+
 
   return (
     <div className="bg-white min-h-screen">
@@ -85,6 +90,34 @@ const featuredColors = [
                   <span className="text-sm text-gray-700 group-hover:text-gray-900">#{color.hex}</span>
                 </button>
               ))}
+            </div>
+          </div>
+                    <div className="space-y-5 mt-10">
+            <p className="text-sm font-medium text-gray-700 mb-5 tracking-wider">Try a Color Palette in our Web simulator</p>
+            <div className="flex flex-wrap mt-3 justify-center gap-3">
+             {/* #F6F6F4, #DBAF94, #C4794A, #BC8E6C, #503732 */}
+                <button
+                    onClick={() => tempPal("#F6F6F4,#DBAF94,#C4794A,#BC8E6C,#503732", "signature")}
+                    className="group border-1 border-white relative flex items-center gap-2 px-12 py-3 rounded-md overflow-hidden hover:ring-1 ring-inset ring-black hover:border-black  transition bg-transparent"
+                    >
+                    {/* 5-color background */}
+                    <div className="absolute inset-0 flex">
+                        <div className="flex-1 bg-[#F6F6F4]" />
+                        <div className="flex-1 bg-[#DBAF94]" />
+                        <div className="flex-1 bg-[#C4794A]" />
+                        <div className="flex-1 bg-[#BC8E6C]" />
+                        <div className="flex-1 bg-[#503732]" />
+                    </div>
+
+                    {/* content (above background) */}
+                    <div className="relative z-10 flex items-center gap-2">
+                        
+                        <span className="text-sm text-gray-800 group-hover:text-gray-900">
+                        Signature Coffee
+                        </span>
+                    </div>
+                    </button>
+          
             </div>
           </div>
         </div>

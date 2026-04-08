@@ -222,14 +222,10 @@ function PaletteCard({ palette, navigate }) {
     setTimeout(() => setSavedAll(false), 2000);
   };
 
-const tempPal = (text, index) => {
-
-    
-
+  const tempPal = (text, index) => {
     localStorage.setItem("temporary", text);
-    navigate(`/examplepage/temporary`)
+    navigate(`/examplepage/temporary`);
   };
-
 
   return (
     <div className="bg-gray-50 rounded-lg overflow-hidden">
@@ -244,7 +240,9 @@ const tempPal = (text, index) => {
             title={`#${color.hex}`}
           >
             <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/20">
-              <span className="text-white text-xs font-mono mb-2">#{color.hex}</span>
+              <span className="text-white text-xs font-mono mb-2">
+                #{color.hex}
+              </span>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -289,17 +287,16 @@ const tempPal = (text, index) => {
           </button>
         </div>
         <div className="mt-3">
-        <button
+          <button
             onClick={() => {
-                const allHex = palette.colors.map((c) => `#${c.hex}`).join(", ");
-                tempPal(allHex, "all");
+              const allHex = palette.colors.map((c) => `#${c.hex}`).join(", ");
+              tempPal(allHex, "all");
             }}
             className="w-full py-2 text-sm font-medium text-white bg-gray-700 hover:bg-gray-400 rounded transition"
           >
             Open web preview
           </button>
-      </div>
-        
+        </div>
       </div>
     </div>
   );
