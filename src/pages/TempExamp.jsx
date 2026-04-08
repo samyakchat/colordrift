@@ -18,8 +18,8 @@ export default function LandingPage() {
       const arraytoref = arstring.split(",");
       
       colorPalette = {
-        primary: arraytoref[0], // slate-900
-        secondary: arraytoref[1], // pink-500
+        primary: arraytoref[1], // slate-900
+        secondary: arraytoref[0], // pink-500
         accent: arraytoref[2], // emerald-500
         surface: arraytoref[3], // slate-50
         muted: arraytoref[4], // slate-500
