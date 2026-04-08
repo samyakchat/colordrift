@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-
+// really like this one: #F3EEEC, #7C6E65, #9CAAA5, #895F47, #3E3D37
 // color palette for external use
 let colorPalette = {
   primary: "#0F172A", // slate-900
@@ -33,34 +33,41 @@ export default function LandingPage() {
 
   const features = [
     {
-      title: "Lightning Fast",
-      description: "Built for speed with optimized performance at every layer.",
-      icon: "⚡",
+      title: "Card 1",
+      description: "This product is so insane that it will blow your mind.",
+
     },
     {
-      title: "Beautiful Design",
+      title: "Card 2",
       description:
-        "Modern aesthetics meet functional simplicity in perfect harmony.",
-      icon: "✨",
+        "With our cutting edge technology, you can achieve insane performance.",
+
     },
     {
-      title: "Fully Responsive",
+      title: "Card 3",
       description:
         "Seamlessly adapts to any screen size, from mobile to desktop.",
-      icon: "📱",
+  
     },
     {
-      title: "Developer Friendly",
+      title: "Card 4",
       description:
         "Intuitive APIs and comprehensive documentation for quick integration.",
-      icon: "💻",
+    
     },
     {
-      title: "Scalable Architecture",
+      title: "Card 5",
       description:
         "Grows with your needs without compromising performance or reliability.",
-      icon: "📈",
+ 
     },
+    {
+      title: "Card 6",
+      description:
+        "Grows with your needs without compromising performance or reliability.",
+ 
+    },
+    
   ];
 
   return (
@@ -74,13 +81,13 @@ export default function LandingPage() {
       {/* floating toggle */}
       <button
         onClick={() => setIsDarkMode(!isDarkMode)}
-        className="fixed bottom-8 right-8 z-[1000] w-14 h-14 flex items-center justify-center text-2xl shadow-xl transition-all duration-300 border-none rounded-full cursor-pointer hover:scale-110 active:scale-95"
+        className="fixed bottom-8 right-8 z-[1000] px-4 py-3 flex items-center justify-center text-md shadow-xl transition-all duration-300 border-none rounded-md cursor-pointer hover:scale-110 active:scale-95"
         style={{
           backgroundColor: isDarkMode ? "#ffffff" : colorPalette.primary,
           color: isDarkMode ? colorPalette.primary : "#ffffff",
         }}
       >
-        {isDarkMode ? "☀️" : "🌙"}
+        {isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
       </button>
 
       {/* hero */}
@@ -93,32 +100,31 @@ export default function LandingPage() {
         }}
       >
         <div
-          className="absolute w-[400px] h-[400px] rounded-full opacity-10 -top-[200px] -right-[100px] animate-[float_6s_ease-in-out_infinite]"
+          className="absolute w-[400px] h-[400px] rounded-full opacity-10 -top-[200px] -right-[100px] "
           style={{ backgroundColor: colorPalette.secondary }}
         />
         <div
-          className="absolute w-[300px] h-[300px] rounded-full opacity-10 -bottom-[100px] -left-[100px] animate-[float_8s_ease-in-out_infinite_reverse]"
+          className="absolute w-[300px] h-[300px] rounded-full opacity-10 -bottom-[100px] -left-[100px] "
           style={{ backgroundColor: colorPalette.accent }}
         />
 
         <div className="relative z-10 max-w-[800px] text-center">
           <h1 className="mb-6 text-6xl font-black leading-tight tracking-tight">
-            Build Something <br />
+            Your main title <br />
             <span
               className="text-transparent bg-clip-text"
               style={{
                 color: `${colorPalette.accent}`,
               }}
             >
-              Extraordinary
+              and the important word
             </span>
           </h1>
           <p
             className="text-md leading-relaxed"
             style={{ color: isDarkMode ? "#b0b0b0" : colorPalette.muted }}
           >
-            A modern platform designed for creators and developers who demand
-            excellence. Fast, beautiful, and scalable.
+            A pretty descriptive paragraph about why somebody would use your product and maybe add a fun fact or something because you really have to fill this space.
           </p>
           <div className="flex mt-7 flex-wrap justify-center gap-4">
             <button
@@ -156,48 +162,41 @@ export default function LandingPage() {
 
       {/* features */}
       <section className="max-w-[1200px] mx-auto py-24 px-8">
-        <h2 className="mb-4 text-5xl font-black text-center">
+        <h2 className="mb-4 text-lg font-black text-center">
           Powerful Features
         </h2>
+        <div className="flex justify-center  mt-4 mb-5">
         <p
-          className="max-w-[600px] mx-auto mb-16 text-lg text-center"
+          className="max-w-[600px] mx-auto mt-16 text-md text-center"
           style={{ color: isDarkMode ? "#b0b0b0" : colorPalette.muted }}
         >
+            
           Everything you need to create, deploy, and scale your projects with
           confidence.
         </p>
+        </div>
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              onMouseEnter={() => setActiveFeature(index)}
-              className="p-8 border-2 border-transparent border-l-[6px] rounded-2xl cursor-pointer transition-all duration-300"
+              
+              className="p-8 border-2 border-transparent border-l-[6px] rounded-xl cursor-pointer transition-all duration-300"
               style={{
                 backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff",
-                boxShadow:
-                  activeFeature === index
-                    ? `0 16px 32px ${colorPalette.secondary}30`
-                    : isDarkMode
-                    ? "0 4px 12px rgba(0,0,0,0.5)"
-                    : "0 4px 12px rgba(0,0,0,0.05)",
-                transform:
-                  activeFeature === index ? "translateY(-8px)" : "none",
+          
+           
                 borderLeftColor:
-                  index % 2 === 0
-                    ? colorPalette.accent
-                    : isDarkMode
-                    ? colorPalette.muted
-                    : colorPalette.primary,
-                borderColor:
-                  activeFeature === index
-                    ? colorPalette.secondary
-                    : "transparent",
+                
+                    colorPalette.accent
+                    ,
+                
+                  
               }}
             >
-              <div className="mb-4 text-5xl">{feature.icon}</div>
+              
               <h3
-                className="mb-3 text-xl font-bold"
+                className="mb-3 text-lg font-semibold"
                 style={{ color: isDarkMode ? "#f5f5f5" : colorPalette.primary }}
               >
                 {feature.title}
@@ -217,18 +216,18 @@ export default function LandingPage() {
       <section
         className="max-w-[1000px] p-16 mx-8 my-16 text-center text-white rounded-[1.5rem] md:mx-auto"
         style={{
-          background: isDarkMode
-            ? "linear-gradient(to bottom right, #1a1a1a, #2a2a2a)"
-            : `linear-gradient(to bottom right, ${colorPalette.primary}, ${colorPalette.secondary}66)`,
+          background: `${colorPalette.primary}`,
         }}
       >
         <h2 className="mb-6 text-4xl font-black">Ready to Get Started?</h2>
-        <p className="max-w-[600px] mx-auto mb-10 text-lg opacity-95">
-          Join thousands of creators and developers who are already building
-          amazing things.
-        </p>
+        <div className="flex justify-center  mt-2 mb-7">
+            <p className="max-w-[600px] mx-auto mb-10 text-lg opacity-95">
+            Join me and my three employees who are already building
+            amazing things.
+            </p>
+        </div>
         <button
-          className="px-10 py-4 text-lg font-bold text-white transition-transform duration-300 border-none rounded-lg cursor-pointer hover:scale-105"
+          className="px-8 py-3 text-md font-semibold text-white transition-transform duration-300 border-none rounded-md cursor-pointer hover:scale-105"
           style={{ backgroundColor: colorPalette.accent }}
         >
           Start Your Free Trial
@@ -246,10 +245,10 @@ export default function LandingPage() {
         <div className="max-w-[1200px] mx-auto grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-8 mb-8">
           <div>
             <div className="mb-4 text-xl font-bold">
-              Design<span style={{ color: colorPalette.secondary }}>.</span>
+              Cliche Company<span style={{ color: colorPalette.secondary }}>.</span>
             </div>
             <p className="leading-relaxed opacity-80">
-              Building modern web experiences with cutting-edge technology.
+              Building modern web experiences with cool technology.
             </p>
           </div>
           <div>
@@ -273,7 +272,7 @@ export default function LandingPage() {
           className="pt-8 text-sm text-center border-t opacity-60"
           style={{ borderTopColor: `${colorPalette.muted}4D` }}
         >
-          © 2026 Design. All rights reserved.
+          © 2099 Cliche Company. No rights reserved.
         </div>
       </footer>
 

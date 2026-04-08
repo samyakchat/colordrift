@@ -222,6 +222,15 @@ function PaletteCard({ palette, navigate }) {
     setTimeout(() => setSavedAll(false), 2000);
   };
 
+const tempPal = (text, index) => {
+
+    
+
+    localStorage.setItem("temporary", text);
+    navigate(`/examplepage/temporary`)
+  };
+
+
   return (
     <div className="bg-gray-50 rounded-lg overflow-hidden">
       {/* Color Swatches */}
@@ -279,6 +288,18 @@ function PaletteCard({ palette, navigate }) {
             {savedAll ? "Saved!" : "Save Palette"}
           </button>
         </div>
+        <div className="mt-3">
+        <button
+            onClick={() => {
+                const allHex = palette.colors.map((c) => `#${c.hex}`).join(", ");
+                tempPal(allHex, "all");
+            }}
+            className="w-full py-2 text-sm font-medium text-white bg-gray-700 hover:bg-gray-400 rounded transition"
+          >
+            Open web preview
+          </button>
+      </div>
+        
       </div>
     </div>
   );
