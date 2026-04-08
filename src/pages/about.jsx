@@ -10,7 +10,7 @@ export default function About() {
                 When designing UI, the process shouldn't be hindered by the search for the right colors. Colordrift is simple, you can search up any color, explore variations, preview frontend components, and copy code for platforms.
             </p>
             <p className="text-lg text-gray-700 mb-4">
-Additionally, you can explore color palettes with themes that change every day, save them to your favorites to explore later, and view them in action with our web view feature. In web view, change primary, secondary, and other parameters to decide what fits best for you!            </p>
+Additionally, you can explore randomly generated color palettes with themes that change every day, save them to your favorites to explore later, and view them in action with our web view feature. In web view, change primary, secondary, and other parameters to decide what fits best for you!            </p>
             <div className="mt-3">
             <p className="text-lg text-[#78aa28] mt-6 mb-4">
                 Driven by The Color API and colormind.io
