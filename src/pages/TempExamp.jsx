@@ -10,7 +10,7 @@ let colorPalette = {
   muted: "#64748B",
 };
 
-const savePalette = (text, index) => {
+const savePalette = () => {
   if (!localStorage.getItem("index")) {
     localStorage.setItem("index", 1);
   } else {
@@ -19,10 +19,8 @@ const savePalette = (text, index) => {
   }
 
   let currentnum = parseInt(localStorage.getItem("index"));
-  localStorage.setItem(currentnum.toString(), text);
+  localStorage.setItem(currentnum.toString(), localStorage.getItem("temporary"));
 
-  setSavedAll(true);
-  setTimeout(() => setSavedAll(false), 2000);
 };
 
 //array for global variables jsut setting up
@@ -152,18 +150,29 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen ">
-      <div className="bg-white py-5 px-8 border-b flex justify-center">
+      <div className="bg-white py-5 px-8 border-b flex items-center justify-between">
+
+        <div className="w-[80px] hidden md:block"></div> 
+
+
         <div className="flex flex-wrap gap-4 items-center justify-center">
           <Dropdown label="Primary" colorKey="primary" refreshUI={setTick} />
-          <Dropdown
-            label="Secondary"
-            colorKey="secondary"
-            refreshUI={setTick}
-          />
+          <Dropdown label="Secondary" colorKey="secondary" refreshUI={setTick} />
           <Dropdown label="Accent" colorKey="accent" refreshUI={setTick} />
           <Dropdown label="Surface" colorKey="surface" refreshUI={setTick} />
           <Dropdown label="Muted" colorKey="muted" refreshUI={setTick} />
         </div>
+
+
+        <button
+          onClick={() => {
+           
+            savePalette();
+          }}
+          className="px-4 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-400 rounded transition"
+        >
+          Save
+        </button>
       </div>
 
       <div
