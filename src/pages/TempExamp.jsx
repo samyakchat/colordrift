@@ -25,6 +25,7 @@ const savePalette = (text, index) => {
   setTimeout(() => setSavedAll(false), 2000);
 };
 
+//array for global variables jsut setting up
 let arraytoref = ["2", "3", "4", "5", "6"];
 
 const Dropdown = ({ label, colorKey, refreshUI }) => {
