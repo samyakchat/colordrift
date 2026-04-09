@@ -163,16 +163,29 @@ export default function LandingPage() {
           <Dropdown label="Muted" colorKey="muted" refreshUI={setTick} />
         </div>
 
-
-        <button
+        {paramId=="temporary" && (
+            <button
+              onClick={() => {
+              
+                savePalette();
+              }}
+              className="px-4 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-400 rounded transition"
+            >
+              Save
+            </button>
+        )}
+        {paramId!="temporary" && (
+                  <button
           onClick={() => {
            
-            savePalette();
+            
           }}
-          className="px-4 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-400 rounded transition"
+          className="px-4 py-2 text-sm font-medium text-white bg-white "
         >
           Save
         </button>
+        )}
+
       </div>
 
       <div
