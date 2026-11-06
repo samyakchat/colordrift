@@ -15,7 +15,7 @@ npm install
 npm run dev
 ```
 
-Open `/colordle` to play Colordle locally. A new puzzle starts at midnight UTC; puzzle #1 is November 6, 2026. Everyone gets the same daily color, selected deterministically from The Color API’s named colors so the exact answer is always guessable.
+Open `/colordle` to play Colordle locally. A new puzzle starts at midnight Eastern time (EST/EDT); puzzle #1 is November 6, 2026. Everyone gets the same daily color, selected deterministically from The Color API’s named colors so the exact answer is always guessable.
 
 Players can guess any name in the bundled [Color API dataset](https://github.com/joshbeckman/thecolorapi/blob/master/static/colorNames.json), including Curious Blue. Type a name to see suggestions. Spaces, capitalization, accents, and punctuation are ignored. Unknown names and repeated guesses do not count as attempts.
 

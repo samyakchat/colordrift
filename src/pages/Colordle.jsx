@@ -18,19 +18,16 @@ function save(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    // Play remains available when browser storage is disabled or full.
   }
 }
 
 function DailyGame({ puzzle }) {
-  // Version 2 starts a clean history for the new color-based rules.
   const storageKey = `colordle:v2:${puzzle.date}`;
   const [guesses, setGuesses] = useState(() => {
     const saved = readSaved(storageKey);
     if (!Array.isArray(saved)) return [];
     const names = [...new Set(saved.filter(value => typeof value === 'string').map(normalizeName))];
     const valid = names.map(findNamedColor).filter(Boolean);
-    // Never restore attempts after a winning guess.
     const winningIndex = valid.findIndex(guess => guess.hex === puzzle.hex);
     return winningIndex < 0 ? valid : valid.slice(0, winningIndex + 1);
   });
@@ -68,12 +65,12 @@ function DailyGame({ puzzle }) {
   }
 
   function revealDevColor() {
-    const code = window.prompt('Enter the dev code:');
+    const code = window.prompt('enter:');
     if (code === null) return;
     if (code === '5678') {
       window.alert(`Today’s color is ${getDailyPuzzle().name}`);
     } else {
-      window.alert('Incorrect dev code.');
+      window.alert('nope');
     }
   }
 
@@ -122,7 +119,8 @@ function DailyGame({ puzzle }) {
             aria-invalid={Boolean(error)}
             className="min-w-0 flex-1 bg-white px-3 py-3 text-sm text-gray-900 outline-none disabled:bg-gray-50"
           />
-          <button type="submit" disabled={won || !input.trim()} className="border-l border-gray-300 px-4 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-default disabled:text-gray-400">Guess</button>
+          <button type="submit" disabled={won || !input.trim()} className="border-l border-gray-300 px-4 text-sm font-medium text-gray-900 
+          transition hover:bg-[#679924] disabled:cursor-default disabled:text-gray-400">Guess</button>
         </div>
         {error && <p id="guess-error" role="alert" className="mt-2 text-sm text-red-700">{error}</p>}
         <datalist id="color-name-suggestions">
@@ -179,7 +177,7 @@ function DailyGame({ puzzle }) {
       <div className="mt-3">
         <p className="mt-8 text-xs text-gray-400">New color everyday</p>
       </div>
-      <button type="button" onClick={revealDevColor} className="colordle-button mt-4">Dev</button>
+      <button type="button" onClick={revealDevColor} className="colordle-button mt-4">developer</button>
     </main>
   );
 }
@@ -211,13 +209,13 @@ export default function Colordle() {
         <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-6 py-3">
           <a href={mainSiteUrl} className="flex items-center gap-2 text-left" aria-label="Colordle by colordrift — visit colordrift">
             <img src="/logo.png" alt="" className="h-9 w-9 object-contain" />
-            <span className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2"><span className="text-2xl font-semibold tracking-tight">Colordle</span><span className="text-xs text-gray-500 sm:text-sm">by <span className="font-semibold text-gray-700">colordrift</span></span></span>
+            <span className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2"><span className="text-2xl font-semibold tracking-tight justify-center">Colordle</span><span className="text-xs text-gray-500 sm:text-sm">by <span className="font-semibold text-gray-700">colordrift</span></span></span>
           </a>
           <button onClick={() => setInfoOpen(true)} className="colordle-button inline-flex items-center gap-2" aria-label="How to play and about Colordle"><InformationCircleIcon className="h-5 w-5" aria-hidden="true" /><span className="hidden sm:inline">How to play</span></button>
         </div>
       </header>
       <DailyGame key={puzzle.date} puzzle={puzzle} />
-      <footer className="border-t border-gray-200 px-6 py-5 text-xs text-gray-500">A daily color break by <a className="font-medium text-gray-700 hover:text-[#73aa28]" href={mainSiteUrl}>colordrift</a>.</footer>
+      <footer className="border-t border-gray-200 px-6 py-5 text-xs text-gray-500">Go to <a className="font-medium text-gray-700 hover:text-[#73aa28]" href={mainSiteUrl}>colordrift</a>.</footer>
       <Dialog open={infoOpen} onClose={setInfoOpen} className="relative z-50">
         <div className="fixed inset-0 bg-black/20" aria-hidden="true" />
         <div className="fixed inset-0 overflow-y-auto p-4 sm:p-8">
@@ -232,13 +230,11 @@ export default function Colordle() {
                 <p>Try any name from The Color API’s color list, including shades like Curious Blue. Start typing to see suggestions. Spaces, hyphens, and capitalization don’t affect your guess.</p>
                 <p>After you submit a guess, its card shows that color with a similarity percentage, like <strong>32.58% similar</strong>. The score compares how the colors look, using their hue, lightness, and saturation. Higher percentages mean you’re closer. Your newest guess appears at the top.</p>
                 <p>Use your guess colors and the “Closer” or “Further away” feedback to guide your next guess. Find the exact color to reach <strong>100.00%</strong> and win. Names can have any number of letters.</p>
-                <p>Once you solve it, share your try count without giving away the answer. A new puzzle arrives at midnight UTC. Progress is saved in this browser.</p>
+                <p>Once you solve it, share your try count without giving away the answer. A new puzzle arrives at midnight Eastern time (EST/EDT). Progress is saved in this browser.</p>
               </div>
               <div className="mt-6 border-t border-gray-200 pt-6">
                 <h2 className="!mb-3 !text-2xl text-gray-900">About Colordle</h2>
-                <p className="text-sm leading-relaxed text-gray-600">A little daily challenge for your eye for color. Colordle is part of colordrift, built to make exploring color a little more playful.</p>
-                <p className="mt-4 text-sm text-[#679924]">Driven by <a href="https://www.thecolorapi.com/" target="_blank" rel="noreferrer" className="underline underline-offset-2">The Color API</a></p>
-                <p className="mt-4 text-sm text-gray-900">Project by Samyak Chatterjee</p>
+                <p className="text-sm leading-relaxed text-gray-600">Colordle made on colordrift platform. <a className="mt-4 text-sm text-[#679924] underline" href={"https://colordrift.vercel.app/about"}>About Colordrift</a></p>
               </div>
             </DialogPanel>
           </div>

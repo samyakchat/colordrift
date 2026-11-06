@@ -2,14 +2,35 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildShareText, getDailyPuzzle, isColordleHost, normalizeName, colorSimilarity, findNamedColor, getContrastText, NAMED_COLORS } from './colordle.js';
 
-test('daily puzzle starts at #1 and changes at midnight UTC', () => {
-  const first = getDailyPuzzle(new Date('2026-11-06T00:00:00Z'));
+test('daily puzzle starts at #1 and changes at midnight Eastern Standard Time', () => {
+  const first = getDailyPuzzle(new Date('2026-11-06T05:00:00Z'));
   assert.equal(first.day, 1);
-  assert.deepEqual(first, getDailyPuzzle(new Date('2026-11-06T23:59:59Z')));
-  const next = getDailyPuzzle(new Date('2026-11-07T00:00:00Z'));
+  assert.equal(first.date, '2026-11-06');
+  assert.deepEqual(first, getDailyPuzzle(new Date('2026-11-07T04:59:59Z')));
+  const next = getDailyPuzzle(new Date('2026-11-07T05:00:00Z'));
   assert.equal(next.day, 2);
   assert.notEqual(first.hex, next.hex);
   assert.match(next.hex, /^[A-F0-9]{6}$/);
+});
+
+test('summer resets happen at midnight Eastern Daylight Time', () => {
+  const before = getDailyPuzzle(new Date('2027-07-02T03:59:59Z'));
+  const after = getDailyPuzzle(new Date('2027-07-02T04:00:00Z'));
+  assert.equal(before.date, '2027-07-01');
+  assert.equal(after.date, '2027-07-02');
+  assert.equal(after.day, before.day + 1);
+});
+
+test('DST clock changes neither skip nor repeat puzzles', () => {
+  for (const [beforeClockChange, afterClockChange, beforeMidnight, midnight] of [
+    ['2027-03-14T06:59:59Z', '2027-03-14T07:00:00Z', '2027-03-15T03:59:59Z', '2027-03-15T04:00:00Z'],
+    ['2027-11-07T05:59:59Z', '2027-11-07T06:00:00Z', '2027-11-08T04:59:59Z', '2027-11-08T05:00:00Z'],
+  ]) {
+    const puzzle = getDailyPuzzle(new Date(beforeClockChange));
+    assert.deepEqual(getDailyPuzzle(new Date(afterClockChange)), puzzle);
+    assert.deepEqual(getDailyPuzzle(new Date(beforeMidnight)), puzzle);
+    assert.equal(getDailyPuzzle(new Date(midnight)).day, puzzle.day + 1);
+  }
 });
 
 test('a date is shared across player time zones', () => {

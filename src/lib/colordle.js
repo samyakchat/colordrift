@@ -10,12 +10,24 @@ for (const color of colorNames) {
 }
 export const NAMED_COLORS = [...colorsByName.values()];
 
-// Puzzle #1 is November 6, 2026. All players roll over at midnight UTC.
+// Puzzle #1 is November 6, 2026. Everyone resets at midnight New York time,
+// including the automatic switch between EST and EDT.
 const EPOCH = Date.UTC(2026, 10, 6);
 const DAY_MS = 86_400_000;
+const puzzleDateFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
 
 export function getDailyPuzzle(now = new Date()) {
-  const date = now.toISOString().slice(0, 10);
+  const { year, month, day: dayOfMonth } = Object.fromEntries(
+    puzzleDateFormatter.formatToParts(now).map(({ type, value }) => [type, value]),
+  );
+  const date = `${year}-${month}-${dayOfMonth}`;
+  // Count calendar dates with UTC arithmetic so 23/25-hour DST days still
+  // advance the puzzle number exactly once.
   const day = Math.floor((Date.parse(`${date}T00:00:00Z`) - EPOCH) / DAY_MS) + 1;
   // A deterministic date seed: no per-visitor randomness.
   const seed = ((day * 2654435761) >>> 0) & 0xffffff;
