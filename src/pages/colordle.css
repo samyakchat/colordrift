@@ -1,0 +1,28 @@
+.colordle {
+  color-scheme: light;
+}
+
+.colordle-button {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: #fff;
+  padding: 0.5rem 0.875rem;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 150ms, border-color 150ms;
+  cursor: pointer;
+}
+
+.colordle-button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.colordle button:focus-visible,
+.colordle a:focus-visible,
+.colordle textarea:focus-visible {
+  outline: 2px solid #73aa28;
+  outline-offset: 3px;
+}
+

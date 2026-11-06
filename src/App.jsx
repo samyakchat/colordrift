@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Palettes from './pages/Palettes';
@@ -8,10 +8,16 @@ import About from './pages/about';
 import { Analytics } from '@vercel/analytics/react';
 import Saved from './pages/Saved';
 import Example from './pages/TempExamp';
+import Colordle from './pages/Colordle';
+import { isColordleHost } from './lib/colordle';
 
-function App() {
+function SiteRoutes() {
+  const { pathname } = useLocation();
+  if (isColordleHost(window.location.hostname) || pathname === '/colordle' || pathname === '/colordle/') {
+    return <Colordle />;
+  }
   return (
-    <Router>
+    <>
       <Navbar />
       <Routes>
         
@@ -24,10 +30,13 @@ function App() {
 
       </Routes>
       <Footer />
-      <Analytics />
-    </Router>
+    </>
     
   );
+}
+
+function App() {
+  return <Router><SiteRoutes /><Analytics /></Router>;
 }
 
 export default App;

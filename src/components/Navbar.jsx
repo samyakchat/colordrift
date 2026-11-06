@@ -3,6 +3,7 @@ import { useState } from "react";
 import { menuOutline } from 'ionicons/icons';
 
 import { addIcons } from "ionicons";
+import { getColordleUrl } from '../lib/colordle';
 export default function Navbar() {
     addIcons({ menuOutline });
 
@@ -81,7 +82,7 @@ export default function Navbar() {
           {/* Center Search (desktop) */}
           <form
             onSubmit={handleSearch}
-            className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-full max-w-lg"
+            className="hidden xl:flex absolute left-1/2 transform -translate-x-1/2 w-full max-w-sm"
           >
             <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
               <input
@@ -102,6 +103,9 @@ export default function Navbar() {
 
           {/* Links */}
           <div className="flex items-center gap-5 hidden md:flex">
+            <a href={getColordleUrl()} className="text-sm text-gray-700 hover:text-[#73aa28]">
+              Colordle
+            </a>
             <Link to="/" className="text-sm text-gray-700 hover:text-[#73aa28]">
               Home
             </Link>
@@ -141,6 +145,11 @@ export default function Navbar() {
             {open && (
                 <div className="absolute top-14 left-0 right-0 bg-white border-b-2 border-gray-200 md:hidden  rounded-3xl">
                   <ul className="flex flex-col px-6 py-4 gap-3">
+                    <li>
+                      <a href={getColordleUrl()} onClick={() => setOpen(false)} className="block text-sm text-gray-700 hover:text-[#73aa28] transition py-2">
+                        Colordle
+                      </a>
+                    </li>
                     <li>
                       <Link to="/" onClick={() => setOpen(false)} className="block text-sm text-gray-700 hover:text-[#73aa28] transition py-2">
                         Home
@@ -183,7 +192,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile search */}
-        <form onSubmit={handleSearch} className="md:hidden py-3 flex gap-2">
+        <form onSubmit={handleSearch} className="xl:hidden py-3 flex gap-2">
           <input
             type="text"
             placeholder="Hex or RGB"
