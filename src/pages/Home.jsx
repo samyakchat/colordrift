@@ -1,25 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import ColorSearch from '../components/ColorSearch';
 
 export default function Home() {
   const navigate = useNavigate();
-  const [searchInput, setSearchInput] = useState('');
-
-  const handleSearch = () => {
-    if (searchInput.trim()) {
-      let hexColor = searchInput.trim().toUpperCase();
-      if (!hexColor.startsWith('#')) {
-        hexColor = '#' + hexColor;
-      }
-      navigate(`/color/${hexColor.replace('#', '')}`);
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
   const tempPal = (text, index) => {
     localStorage.setItem("temporary", text);
     navigate(`/examplepage/temporary`);
@@ -56,22 +39,7 @@ const featuredColors = [
          
 
    
-          <div className="flex gap-3 max-w-xl mx-auto mb-12">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Enter HEX, or RGB (like #78AA23) "
-              className="flex-1 px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            />
-            <button
-              onClick={handleSearch}
-              className="px-6 py-3 bg-[#73aa28] text-white rounded-lg hover:bg-[#92d13d] transition font-medium"
-            >
-              Search
-            </button>
-          </div>
+          <ColorSearch onSearch={hex => navigate(`/color/${hex}`)} />
 
           <div className="space-y-5">
             <p className="text-sm font-medium text-gray-700 mb-5 tracking-wider">Try some colors I like</p>

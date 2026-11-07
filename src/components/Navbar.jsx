@@ -4,61 +4,25 @@ import { menuOutline } from 'ionicons/icons';
 
 import { addIcons } from "ionicons";
 import { getColordleUrl } from '../lib/colordle';
+import { resolveColorSearch } from '../lib/colorSearch.js';
 export default function Navbar() {
     addIcons({ menuOutline });
 
   const [colorInput, setColorInput] = useState("");
   const [open, setOpen] = useState(false);
+  const [searchError, setSearchError] = useState("");
   const navigate = useNavigate();
-
-  const rgbToHex = (r, g, b) => {
-    return ((r << 16) | (g << 8) | b)
-      .toString(16)
-      .padStart(6, "0")
-      .toUpperCase();
-  };
-
-  const parseColorInput = (input) => {
-    const trimmed = input.trim();
-
-    // Check if it's RGB format: rgb(r, g, b)
-    const rgbMatch = trimmed.match(
-      /rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i
-    );
-    if (rgbMatch) {
-      const r = parseInt(rgbMatch[1]);
-      const g = parseInt(rgbMatch[2]);
-      const b = parseInt(rgbMatch[3]);
-
-      // Validate RGB values
-      if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
-        return rgbToHex(r, g, b);
-      }
-    }
-
-    // Check if it's just comma-separated RGB: r,g,b
-    const csvMatch = trimmed.match(/^(\d+)\s*,\s*(\d+)\s*,\s*(\d+)$/);
-    if (csvMatch) {
-      const r = parseInt(csvMatch[1]);
-      const g = parseInt(csvMatch[2]);
-      const b = parseInt(csvMatch[3]);
-
-      if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
-        return rgbToHex(r, g, b);
-      }
-    }
-
-    // Otherwise assume it's hex
-    return trimmed.replace("#", "").toUpperCase();
-  };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (colorInput.trim()) {
-      const hex = parseColorInput(colorInput);
-      navigate(`/color/${hex}`);
-      setColorInput("");
+    const hex = resolveColorSearch(colorInput);
+    if (!hex) {
+      setSearchError('Enter a Color API name, HEX, or RGB values (0–255).');
+      return;
     }
+    setSearchError("");
+    navigate(`/color/${hex}`);
+    setColorInput("");
   };
 
   return (
@@ -87,9 +51,12 @@ export default function Navbar() {
             <div className="flex w-full border border-gray-300 rounded-md overflow-hidden focus-within:border-[#73aa28] transition">
               <input
                 type="text"
-                placeholder="Hex (78aa28) or RGB (120, 170, 40)"
+                placeholder="Color name, HEX, or RGB"
                 value={colorInput}
-                onChange={(e) => setColorInput(e.target.value)}
+                onChange={(e) => { setColorInput(e.target.value); setSearchError(""); }}
+                aria-label="Search by color name, HEX, or RGB"
+                aria-invalid={Boolean(searchError)}
+                aria-describedby={searchError ? "navbar-search-error" : undefined}
                 className="w-full px-3 py-2 text-sm outline-none"
               />
               <button
@@ -195,9 +162,12 @@ export default function Navbar() {
         <form onSubmit={handleSearch} className="xl:hidden py-3 flex gap-2">
           <input
             type="text"
-            placeholder="Hex or RGB"
+            placeholder="Color name, HEX, or RGB"
             value={colorInput}
-            onChange={(e) => setColorInput(e.target.value)}
+            onChange={(e) => { setColorInput(e.target.value); setSearchError(""); }}
+                aria-label="Search by color name, HEX, or RGB"
+                aria-invalid={Boolean(searchError)}
+                aria-describedby={searchError ? "navbar-search-error" : undefined}
             className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md outline-none"
           />
           <button
@@ -207,6 +177,7 @@ export default function Navbar() {
             Go
           </button>
         </form>
+        {searchError && <p id="navbar-search-error" role="alert" className="pb-2 text-xs text-red-700 xl:text-center">{searchError}</p>}
       </div>
     </nav>
   );

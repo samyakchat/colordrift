@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { InformationCircleIcon, XMarkIcon, ShareIcon } from '@heroicons/react/24/outline';
+import { InformationCircleIcon, XMarkIcon, ShareIcon, MagnifyingGlassIcon} from '@heroicons/react/24/outline';
+
 import {
   buildShareText, getDailyPuzzle, getMainSiteUrl, normalizeName, colorSimilarity, findNamedColor, getContrastText, NAMED_COLORS,
 } from '../lib/colordle';
 import './colordle.css';
+import ColorSearch from '../components/ColorSearch';
 
 function readSaved(key) {
   try {
@@ -167,7 +169,19 @@ function DailyGame({ puzzle }) {
           <div className="mt-6 rounded-md border border-gray-200 bg-gray-50 p-5">
             <h2 className="!mb-2 !text-xl text-gray-900">You guessed it in {guesses.length} {guesses.length === 1 ? 'try' : 'tries'}!</h2>
             <p className="text-sm text-gray-600">Today’s color is <strong className="font-semibold text-gray-900">{puzzle.name}</strong>.</p>
-            <button type="button" onClick={share} className="colordle-button mt-4 inline-flex items-center gap-2"><ShareIcon className="h-4 w-4" aria-hidden="true" />Share results</button>
+            <div className="flex flex-row gap-2 items-center justify-center">
+              <button type="button" onClick={share} className="colordle-button mt-4 inline-flex items-center gap-2"><ShareIcon className="h-4 w-4" aria-hidden="true" />Share results</button>
+              <button 
+              type="button" 
+              onClick={() => {
+                window.location.assign(
+                  new URL(`/color/${puzzle.hex}`, getMainSiteUrl()).href
+                );
+              }}
+              className="colordle-button mt-4 inline-flex items-center gap-2">
+                <MagnifyingGlassIcon className="h-4 w-4" aria-hidden="true" />
+                Explore Color</button>
+            </div>
             {shareStatus && <p className="mt-3 text-sm text-gray-600">{shareStatus}</p>}
             {manualShare && <textarea aria-label="Results to copy" readOnly value={manualShare} onFocus={event => event.target.select()} className="mt-3 w-full rounded-md border border-gray-300 bg-white p-3 text-sm text-gray-900" rows={4} />}
           </div>
@@ -261,15 +275,17 @@ export default function Colordle() {
                 <button onClick={() => setInfoOpen(false)} className="rounded-md p-1 text-gray-500 hover:bg-gray-100" aria-label="Close information"><XMarkIcon className="h-5 w-5" /></button>
               </div>
               <div className="space-y-4 text-sm leading-relaxed text-gray-600">
-                <p>Find today’s hidden color. You have unlimited tries, and everyone gets the same mystery color each day. Start with any color name and let the similarity hints guide you.</p>
-                <p>Try any name from The Color API’s color list, including shades like Curious Blue. Start typing to see suggestions. Spaces, hyphens, and capitalization don’t affect your guess.</p>
-                <p>After you submit a guess, its card shows that color with a similarity percentage, like <strong>32.58% similar</strong>. The score compares how the colors look, using their hue, lightness, and saturation. Higher percentages mean you’re closer. Your newest guess appears at the top.</p>
-                <p>Use your guess colors and the “Closer” or “Further away” feedback to guide your next guess. Find the exact color to reach <strong>100.00%</strong> and win. Names can have any number of letters.</p>
-                <p>Once you solve it, share your try count without giving away the answer. A new puzzle arrives at midnight Eastern time (EST/EDT). Progress is saved in this browser.</p>
+                <p>Guess the hidden color! The higher the percentage, the closer you are. A new color appears every day.</p>
+                <p>A new color will arrive tomorrow</p>
               </div>
               <div className="mt-6 border-t border-gray-200 pt-6">
                 <h2 className="!mb-3 !text-2xl text-gray-900">About Colordle</h2>
                 <p className="text-sm leading-relaxed text-gray-600">Colordle made on colordrift platform. <a className="mt-4 text-sm text-[#679924] underline" href={"https://colordrift.vercel.app/about"}>About Colordrift</a></p>
+              </div>
+              <div className="mt-6 border-t border-gray-200 pt-6">
+                <h2 className="!mb-3 !text-2xl text-gray-900">Need Help?</h2>
+                <p className="mb-2 text-xs text-gray-500">Search with colordrift</p>
+                <ColorSearch compact onSearch={hex => window.location.assign(new URL(`/color/${hex}`, mainSiteUrl).href)} />
               </div>
             </DialogPanel>
           </div>
