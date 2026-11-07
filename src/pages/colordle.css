@@ -19,6 +19,29 @@
   border-color: #9ca3af;
 }
 
+.colordle-suggestions {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  padding: 0.25rem;
+  margin: 0.5rem -0.25rem 0;
+}
+
+.colordle-button.colordle-suggestion {
+  flex: 0 0 40%;
+  min-width: 0;
+  min-height: 2.5rem;
+  padding: 0.375rem 0.625rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  scroll-snap-align: start;
+}
+
 .colordle button:focus-visible,
 .colordle a:focus-visible,
 .colordle textarea:focus-visible {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { InformationCircleIcon, XMarkIcon, ShareIcon } from '@heroicons/react/24/outline';
 import {
@@ -35,9 +35,23 @@ function DailyGame({ puzzle }) {
   const [error, setError] = useState('');
   const [shareStatus, setShareStatus] = useState('');
   const [manualShare, setManualShare] = useState('');
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 639px)').matches);
+  const inputRef = useRef(null);
+  const suggestionsRef = useRef(null);
   const won = guesses.some(guess => guess.hex === puzzle.hex);
   const query = normalizeName(input);
   const suggestions = query ? NAMED_COLORS.filter(color => normalizeName(color.name).includes(query)).slice(0, 12) : [];
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 639px)');
+    const updateMobile = () => setIsMobile(media.matches);
+    media.addEventListener('change', updateMobile);
+    return () => media.removeEventListener('change', updateMobile);
+  }, []);
+
+  useEffect(() => {
+    if (suggestionsRef.current) suggestionsRef.current.scrollLeft = 0;
+  }, [query]);
 
   useEffect(() => {
     save(storageKey, guesses.map(guess => normalizeName(guess.name)));
@@ -107,9 +121,10 @@ function DailyGame({ puzzle }) {
         <div className="flex overflow-hidden rounded-md border border-gray-300 bg-white transition focus-within:border-[#73aa28] focus-within:ring-1 focus-within:ring-[#73aa28]">
           <input
             id="color-guess"
+            ref={inputRef}
             value={input}
             onChange={event => { setInput(event.target.value); setError(''); }}
-            list="color-name-suggestions"
+            list={isMobile ? undefined : 'color-name-suggestions'}
             autoComplete="off"
             autoCapitalize="none"
             spellCheck={false}
@@ -117,15 +132,35 @@ function DailyGame({ puzzle }) {
             disabled={won}
             aria-describedby={error ? 'guess-error color-hint' : 'color-hint'}
             aria-invalid={Boolean(error)}
-            className="min-w-0 flex-1 bg-white px-3 py-3 text-sm text-gray-900 outline-none disabled:bg-gray-50"
+            className="min-w-0 flex-1 bg-white px-3 py-3 text-sm text-gray-900 outline-none disabled:bg-gray-50 text-base"
+            style={{fontSize: '16px'}}
           />
           <button type="submit" disabled={won || !input.trim()} className="border-l border-gray-300 px-4 text-sm font-medium text-gray-900 
           transition hover:bg-[#679924] disabled:cursor-default disabled:text-gray-400">Guess</button>
         </div>
+        {isMobile && !won && suggestions.length > 0 && (
+          <div ref={suggestionsRef} className="colordle-suggestions" role="group" aria-label="Color name suggestions">
+            {suggestions.map(color => (
+              <button
+                key={color.name}
+                type="button"
+                className="colordle-button colordle-suggestion"
+                title={color.name}
+                onClick={() => {
+                  setInput(color.name);
+                  setError('');
+                  inputRef.current?.focus({ preventScroll: true });
+                }}
+              >
+                {color.name}
+              </button>
+            ))}
+          </div>
+        )}
         {error && <p id="guess-error" role="alert" className="mt-2 text-sm text-red-700">{error}</p>}
-        <datalist id="color-name-suggestions">
+        {!isMobile && <datalist id="color-name-suggestions">
           {suggestions.map(color => <option key={color.name} value={color.name} />)}
-        </datalist>
+        </datalist>}
       </form>
       <div aria-live="polite" aria-atomic="true">
         {won ? (
