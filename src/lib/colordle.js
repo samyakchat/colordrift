@@ -8,7 +8,24 @@ for (const color of colorNames) {
   const key = normalizeName(color.name);
   if (!colorsByName.has(key)) colorsByName.set(key, color);
 }
-export const NAMED_COLORS = [...colorsByName.values()];
+const API_NAMED_COLORS = [...colorsByName.values()];
+export const NAMED_COLORS = [...API_NAMED_COLORS];
+
+// Familiar, guessable shades that are missing from the upstream naming set.
+const COMMON_COLORS = [
+  ['Light Purple', 'D8B4FE'], ['Dark Purple', '6B21A8'], ['Light Green', '90EE90'],
+  ['Dark Green', '006400'], ['Light Blue', 'ADD8E6'], ['Dark Red', '8B0000'],
+  ['Pink', 'FFC0CB'], ['Beige', 'F5F5DC'], ['Tan', 'D2B48C'], ['Brown', '8B4513'],
+  ['Gray', '808080'], ['Grey', '808080'], ['Mint Green', '98FF98'], ['Sage Green', '9CAF88'],
+];
+for (const [name, hex] of COMMON_COLORS) {
+  const key = normalizeName(name);
+  if (!colorsByName.has(key)) {
+    const color = { name, hex };
+    colorsByName.set(key, color);
+    NAMED_COLORS.push(color);
+  }
+}
 
 // Puzzle #1 is November 6, 2026. Everyone resets at midnight New York time,
 // including the automatic switch between EST and EDT.
@@ -32,7 +49,7 @@ export function getDailyPuzzle(now = new Date()) {
   // A deterministic date seed: no per-visitor randomness.
   const seed = ((day * 2654435761) >>> 0) & 0xffffff;
   // Use an actual named swatch so a name guess can match the target exactly.
-  return { date, day, ...NAMED_COLORS[seed % NAMED_COLORS.length] };
+  return { date, day, ...API_NAMED_COLORS[seed % API_NAMED_COLORS.length] };
 }
 
 export function normalizeName(value) {
@@ -79,11 +96,64 @@ function toOklab(hex) {
 export function colorSimilarity(guessHex, targetHex) {
   const guess = toOklab(guessHex);
   const target = toOklab(targetHex);
-  const distance = Math.hypot(...guess.map((value, index) => value - target[index]));
-  if (distance === 0) return 100;
-  // Game score: map perceptual distance onto 0–100. Only an exact RGB match
-  // receives 100%; rounding must never mark a near match as solved.
-  return Math.min(99.99, Math.max(0, Math.round((1 - distance) * 10000) / 100));
+  if (guess.every((value, index) => value === target[index])) return 100;
+
+  // Oklab's a/b plane gives a useful hue angle and chroma. Keep lightness and
+  // chroma differences meaningful, while letting related hues (including
+  // neighboring and opposing color families) score more intuitively.
+  const [gL, ga, gb] = guess;
+  const [tL, ta, tb] = target;
+  const gC = Math.hypot(ga, gb);
+  const tC = Math.hypot(ta, tb);
+  const hueAngle = Math.atan2(ga, gb) - Math.atan2(ta, tb);
+  const hueDistance = Math.abs(Math.atan2(Math.sin(hueAngle), Math.cos(hueAngle))) / Math.PI;
+  const chromaScale = Math.min(1, Math.min(gC, tC) / 0.08);
+  // Hue matters less for muted colors. Closely related hues score well;
+  // complementary hues still get partial credit rather than a near-zero score.
+  const huePenalty = Math.min(hueDistance, 1 - hueDistance * 0.45) * chromaScale;
+  const distance = Math.hypot((gL - tL) * 0.9, (gC - tC) * 0.8, huePenalty * 0.28);
+  if (distance > 0.95) return 0;
+  let score = 100 * Math.exp(-distance * 2.2);
+  // A familiar hue family should still feel close even when its shade differs
+  // in lightness or saturation (for example, basic green vs. Chalet Green).
+  if (chromaScale > 0.4 && hueDistance < 0.22) score = Math.max(score, 65 + (0.22 - hueDistance) * 20);
+  // Opposing hues receive meaningful, but clearly lower, partial credit.
+  if (chromaScale > 0.4 && hueDistance > 0.82) score = Math.max(score, 38);
+  return Math.min(99.99, Math.max(0, Math.round(score * 100) / 100));
+}
+
+const SUGGESTION_SEEDS = {
+  green: ['Chalet Green', 'Sage Green', 'Mint Green', 'Light Green', 'Dark Green'],
+  purple: ['Light Purple', 'Dark Purple', 'Wisteria'],
+  blue: ['Light Blue', 'Navy Blue', 'Dark Blue'],
+  brown: ['Brown', 'Cocoa Brown', 'Sisal', 'Tan', 'Beige'],
+  beige: ['Beige', 'Sisal', 'Tan'],
+  tan: ['Tan', 'Sisal', 'Beige'],
+  red: ['Dark Red', 'Pink'],
+};
+
+export function getColorSuggestions(query, limit = 12) {
+  const normalized = normalizeName(query);
+  if (!normalized) return [];
+  const ranked = new Map();
+  const add = (color, rank) => {
+    if (!color) return;
+    const current = ranked.get(color.name);
+    if (!current || rank < current.rank) ranked.set(color.name, { color, rank });
+  };
+  for (const color of NAMED_COLORS) {
+    const name = normalizeName(color.name);
+    if (name === normalized) add(color, -2);
+    else if (name.startsWith(normalized)) add(color, -1);
+    else if (name.includes(normalized)) add(color, 0);
+  }
+  for (const [family, names] of Object.entries(SUGGESTION_SEEDS)) {
+    if (normalizeName(family) === normalized || normalized === `${family}color`) {
+      names.forEach((name, index) => add(findNamedColor(name), -3 + index / 100));
+    }
+  }
+  return [...ranked.values()].sort((a, b) => a.rank - b.rank)
+    .slice(0, limit).map(({ color }) => color);
 }
 
 export function buildShareText(day, tries, url) {

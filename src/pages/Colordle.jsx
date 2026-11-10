@@ -3,7 +3,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { InformationCircleIcon, XMarkIcon, ShareIcon, MagnifyingGlassIcon} from '@heroicons/react/24/outline';
 
 import {
-  buildShareText, getDailyPuzzle, getMainSiteUrl, normalizeName, colorSimilarity, findNamedColor, getContrastText, NAMED_COLORS,
+  buildShareText, getDailyPuzzle, getMainSiteUrl, normalizeName, colorSimilarity, findNamedColor, getContrastText, getColorSuggestions,
 } from '../lib/colordle';
 import './colordle.css';
 import ColorSearch from '../components/ColorSearch';
@@ -42,7 +42,7 @@ function DailyGame({ puzzle }) {
   const suggestionsRef = useRef(null);
   const won = guesses.some(guess => guess.hex === puzzle.hex);
   const query = normalizeName(input);
-  const suggestions = query ? NAMED_COLORS.filter(color => normalizeName(color.name).includes(query)).slice(0, 12) : [];
+  const suggestions = query ? getColorSuggestions(input) : [];
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 639px)');
